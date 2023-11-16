@@ -4,12 +4,15 @@ import React from "react";
 
 import Slider from "react-slick";
 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 interface ArrowProps {
     onClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 const SampleNextArrow: React.FC<ArrowProps> = React.memo(({ onClick }) => (
-    <div className={` z-10`} onClick={onClick}>
+    <div className="slick-arrow slick-next" onClick={onClick}>
         <svg
             className="h-6 w-6 text-gray-600"
             xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +26,7 @@ const SampleNextArrow: React.FC<ArrowProps> = React.memo(({ onClick }) => (
 ));
 
 const SamplePrevArrow: React.FC<ArrowProps> = React.memo(({ onClick }) => (
-    <div className={`z-10`} onClick={onClick}>
+    <div className="slick-arrow slick-prev" onClick={onClick}>
         <svg
             className="h-6 w-6 text-gray-600"
             xmlns="http://www.w3.org/2000/svg"
@@ -55,12 +58,8 @@ const PictureCarousel: React.FC<{ images: string[] }> = ({ images }) => {
     return (
         <Slider {...settings}>
             {images.map((img, index) => (
-                <div key={index} className="flex w-full items-center justify-center">
-                    <img
-                        src={img}
-                        alt={`Slide ${index}`}
-                        className="h-auto w-full rounded-lg shadow-lg"
-                    />
+                <div key={index}>
+                    <img src={img} alt={`Slide ${index}`} className="h-auto max-w-full rounded-lg shadow-lg"/>
                 </div>
             ))}
         </Slider>

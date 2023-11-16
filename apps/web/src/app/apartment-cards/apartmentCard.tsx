@@ -14,8 +14,8 @@ import {
 } from "@blueprint/ui";
 
 import { Apartment } from "../page";
-import  PictureCarousel from "./pictureCarousel";
-import { PotentialRoommateCarousel } from "./potentialRoommateCarousel";
+import PictureCarousel from "./pictureCarousel";
+import PotentialRoommateCarousel from "./potentialRoommateCarousel";
 import { ViewApartment } from "./viewApartmentDetails";
 
 export function ApartmentCard({ apartment }: { apartment: Apartment }) {
@@ -29,9 +29,9 @@ export function ApartmentCard({ apartment }: { apartment: Apartment }) {
                 </div>
             </CardHeader>
 
-            <CardContent className="px-4 py-2">
-                <div className="h-48">
-                    <PictureCarousel images={apartment.images}/>
+            <CardContent className="px-4">
+                <div className="mb-4 px-2">
+                    <PictureCarousel images={apartment.images} />
                 </div>
 
                 <div className="px-4 py-2">
@@ -58,8 +58,8 @@ export function ApartmentCard({ apartment }: { apartment: Apartment }) {
                     <AccordionItem value="1">
                         <AccordionTrigger>Potential Roomates</AccordionTrigger>
                         <AccordionContent>
-                            <div>
-                                <PotentialRoommateCarousel />
+                            <div className="px-6 py-2">
+                                <PotentialRoommateCarousel roommates={apartment.roommates} />
                             </div>
                         </AccordionContent>
                     </AccordionItem>

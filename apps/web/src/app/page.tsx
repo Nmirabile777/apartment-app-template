@@ -1,8 +1,17 @@
 import React from "react";
 
 import { ApartmentCard } from "./apartment-cards/apartmentCard";
+import GoogleMap from "./google-map/_components/google-map";
+
+
+export interface Roommate {
+    name: string;
+    details: string;
+    image: string;
+}
 
 export interface Apartment {
+    id: number; //This is going to be generated for each list of apartments at the time of fetching the apartment data from the API
     name: string;
     bedrooms: number;
     bathrooms: number;
@@ -18,11 +27,12 @@ export interface Apartment {
     description: string;
     url: string;
     dateListed: string;
+    roommates: Roommate[];
     favorited: boolean;
     hidden: boolean;
 }
 
-const apartments = [
+const apartments: Apartment[] = [
     {
         id: 1,
         name: "Apartment 1",
@@ -45,6 +55,18 @@ const apartments = [
         description: "This is a description of Apartment 1. It has all the amenities you need!",
         url: "https://www.example.com/apartment1",
         dateListed: "2021-01-09",
+        roommates: [
+            {
+                name: "Roommate A",
+                details: "Description of Roommate A",
+                image: "https://media.istockphoto.com/id/1498250886/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=DGsRdT5klN5dRkUidD-J1N07eOqmdjtdgaELTp0ZTa8=",
+            },
+            {
+                name: "Roommate B",
+                details: "Description of Roommate B",
+                image: "https://media.istockphoto.com/id/1498250877/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=N7g2asUCnI4XtzT6VgTZenR94M6w3DYyPLMcmwoxSCA=",
+            },
+        ],
         favorited: false,
         hidden: false,
     },
@@ -70,6 +92,18 @@ const apartments = [
         description: "This is a description of Apartment 2. It has all the amenities you need!",
         url: "https://www.example.com/apartment2",
         dateListed: "2022-02-24",
+        roommates: [
+            {
+                name: "Roommate A",
+                details: "Description of Roommate A",
+                image: "https://media.istockphoto.com/id/1498250886/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=DGsRdT5klN5dRkUidD-J1N07eOqmdjtdgaELTp0ZTa8=",
+            },
+            {
+                name: "Roommate B",
+                details: "Description of Roommate B",
+                image: "https://media.istockphoto.com/id/1498250877/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=N7g2asUCnI4XtzT6VgTZenR94M6w3DYyPLMcmwoxSCA=",
+            },
+        ],
         favorited: false,
         hidden: false,
     },
@@ -95,6 +129,18 @@ const apartments = [
         description: "This is a description of Apartment 3. It has all the amenities you need!",
         url: "https://www.example.com/apartment3",
         dateListed: "2022-06-19",
+        roommates: [
+            {
+                name: "Roommate A",
+                details: "Description of Roommate A",
+                image: "https://media.istockphoto.com/id/1498250886/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=DGsRdT5klN5dRkUidD-J1N07eOqmdjtdgaELTp0ZTa8=",
+            },
+            {
+                name: "Roommate B",
+                details: "Description of Roommate B",
+                image: "https://media.istockphoto.com/id/1498250877/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=N7g2asUCnI4XtzT6VgTZenR94M6w3DYyPLMcmwoxSCA=",
+            },
+        ],
         favorited: false,
         hidden: false,
     },
@@ -107,7 +153,13 @@ export default async function Home() {
                 we grind convention feat: apartment-card
                 https://github.com/shadcn-ui/ui/blob/main/CONTRIBUTING.md
             </div>
-            <div>
+
+            <div className="w-9/12">
+                <div>Map here:</div>
+                <GoogleMap lat={0} lng={0} zoom={0} markers={[]} polygons={[]} />
+            </div>
+
+            <div className="float-right mr-4">
                 {apartments.map((apartment) => (
                     <ApartmentCard key={apartment.id} apartment={apartment} />
                 ))}
