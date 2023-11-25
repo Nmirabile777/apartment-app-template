@@ -1,7 +1,7 @@
 import React from "react";
 
 import { ApartmentCard } from "./apartment-cards/apartmentCard";
-import GoogleMap from "./google-map/_components/google-map";
+// import GoogleMap from "./google-map/_components/google-map";
 
 
 export interface Roommate {
@@ -146,6 +146,25 @@ const apartments: Apartment[] = [
     },
 ];
 
+
+// import { LoadScript } from "@react-google-maps/api";
+// import GoogleMapComponent from "./google-map/_components/google-map";
+
+// const App = () => {
+//   return (
+//     <LoadScript googleMapsApiKey="YOUR_API_KEY">
+//       <GoogleMapComponent
+//         lat={...}
+//         lng={...}
+//         zoom={...}
+//         markers={...}
+//         polygons={...}
+//       />
+//     </LoadScript>
+//   );
+// };
+
+
 export default async function Home() {
     return (
         <div>
@@ -156,7 +175,7 @@ export default async function Home() {
 
             <div className="w-9/12">
                 <div>Map here:</div>
-                <GoogleMap lat={0} lng={0} zoom={0} markers={[]} polygons={[]} />
+                {/* <GoogleMap lat={0} lng={0} zoom={0} markers={[]} polygons={[]} /> */}
             </div>
 
             <div className="float-right mr-4">
