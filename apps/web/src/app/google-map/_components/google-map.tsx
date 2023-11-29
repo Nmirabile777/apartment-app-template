@@ -1,82 +1,126 @@
-// import React from "react";
-// import { GoogleMap, Marker, InfoWindow, Polygon } from "@react-google-maps/api";
-// import { FancyInfoWindowContent } from "@/app/google-map/_components/windowContent";
+// GoogleMap.tsx
+"use client";
 
-// type Coordinates = {
-//   lat: number;
-//   lng: number;
-// };
+import React, { useEffect, useRef, useState } from "react";
 
-// type PolygonCoordinates = Coordinates[][][];
+import ReactDOM from "react-dom";
 
-// type GoogleMapProps = {
-//   lat: number;
-//   lng: number;
-//   zoom: number;
-//   markers: Coordinates[];
-//   polygons: PolygonCoordinates;
-// };
+import { FancyInfoWindowContent } from "@/app/google-map/_components/windowContent";
 
-// const mapContainerStyle = {
-//   width: '100%',
-//   height: '400px',
-// };
+declare global {
+    interface Window {
+        initGoogleMap?: () => void;
+    }
+}
 
-// const options = {
-//   scrollwheel: true,
-//   streetViewControl: false,
-// };
+const colors = ["#3e4195", "#FF5733", "#33FFCE"];
 
-// const GoogleMapComponent: React.FC<GoogleMapProps> = ({ lat, lng, zoom, markers, polygons }) => {
-//   const [activeMarker, setActiveMarker] = React.useState<null | number>(null);
+type Coordinates = {
+    lat: number;
+    lng: number;
+};
 
-//   const onMarkerClick = (markerIdx: number) => {
-//     setActiveMarker(markerIdx);
-//   };
+type PolygonCoordinates = Coordinates[][][];
 
-//   return (
-//     <GoogleMap
-//       mapContainerStyle={mapContainerStyle}
-//       center={{ lat, lng }}
-//       zoom={zoom}
-//       options={options}
-//     >
-//       {markers.map((coord, idx) => (
-//         <Marker
-//           key={idx}
-//           position={coord}
-//           onClick={() => onMarkerClick(idx)}
-//           icon={{
-//             url: "./icon.png",
-//             scaledSize: new google.maps.Size(50, 50),
-//           }}
-//         >
-//           {activeMarker === idx ? (
-//             <InfoWindow onCloseClick={() => setActiveMarker(null)}>
-//               <FancyInfoWindowContent
-//                 title="Some Title"
-//                 message="Some Message"
-//                 onButtonClick={() => console.log("Button clicked!")}
-//               />
-//             </InfoWindow>
-//           ) : null}
-//         </Marker>
-//       ))}
-//       {polygons.map((polygonCoords, idx) => (
-//         <Polygon
-//           key={idx}
-//           paths={polygonCoords}
-//           options={{
-//             strokeColor: "#FF0000",
-//             strokeOpacity: 0.8,
-//             strokeWeight: 2,
-//             fillColor: "#FF0000",
-//             fillOpacity: 0.35,
-//           }}
-//         />
-//       ))}
-//     </GoogleMap>
-//   );
-// };
+type GoogleMapProps = {
+    lat: number;
+    lng: number;
+    zoom: number;
+    markers: Coordinates[];
+    polygons: PolygonCoordinates;
+};
 
-// export default GoogleMapComponent;
+const GoogleMap: React.FC<GoogleMapProps> = ({ lat, lng, zoom, markers, polygons }) => {
+    const googleMapRef = useRef<HTMLDivElement>(null);
+    const [scriptLoaded, setScriptLoaded] = useState(false);
+
+    useEffect(() => {
+        const initMap = () => {
+            if (googleMapRef.current) {
+                const map = new google.maps.Map(googleMapRef.current, {
+                    center: { lat, lng },
+                    zoom,
+                    scrollwheel: true,
+                    streetViewControl: false,
+                });
+
+                markers.forEach((coord) => {
+                    const marker = new google.maps.Marker({
+                        position: coord,
+                        map: map,
+                        icon: {
+                            url: "/images/icon.png",
+                            size: new google.maps.Size(100, 100),
+                            origin: new google.maps.Point(0, 0),
+                            anchor: new google.maps.Point(40, 70),
+                            scaledSize: new google.maps.Size(100, 100),
+                        },
+                    });
+
+                    const infoWindow = new google.maps.InfoWindow();
+                    marker.addListener("click", () => {
+                        const infoWindowDiv = document.createElement("div");
+                        ReactDOM.render(
+                            <FancyInfoWindowContent
+                                title="Some Title"
+                                message="Some Message"
+                                onButtonClick={() => console.log("Button clicked!")}
+                            />,
+                            infoWindowDiv,
+                        );
+
+                        infoWindow.setContent(infoWindowDiv);
+                        infoWindow.open(map, marker);
+
+                        google.maps.event.addListener(infoWindow, "closeclick", () => {
+                            ReactDOM.unmountComponentAtNode(infoWindowDiv);
+                        });
+                    });
+                });
+
+                polygons.forEach((polygonGroup, index) => {
+                    const color = colors[index % colors.length];
+                    polygonGroup.forEach((polygonCoords) => {
+                        new google.maps.Polygon({
+                            paths: polygonCoords,
+                            strokeColor: color,
+                            strokeOpacity: 0.8,
+                            strokeWeight: 2,
+                            fillColor: color,
+                            fillOpacity: 0.35,
+                            map: map,
+                        });
+                    });
+                });
+            }
+        };
+
+        if (!scriptLoaded) {
+            const script = document.createElement("script");
+            script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAwtbycn3l16COzlzrOLZUd9aqnpGvbQ0I&callback=initGoogleMap`;
+            script.async = true;
+            script.defer = true;
+            script.onload = () => setScriptLoaded(true);
+            script.onerror = () => console.error("Google Maps script failed to load.");
+            document.body.appendChild(script);
+
+            return () => {
+                document.body.removeChild(script);
+            };
+        }
+
+        window.initGoogleMap = initMap;
+
+        if (scriptLoaded) {
+            initMap();
+        }
+
+        return () => {
+            window.initGoogleMap = undefined;
+        };
+    }, [lat, lng, zoom, markers, polygons, scriptLoaded]);
+
+    return <div ref={googleMapRef} style={{ width: "100%", height: "100%" }} />;
+};
+
+export default GoogleMap;

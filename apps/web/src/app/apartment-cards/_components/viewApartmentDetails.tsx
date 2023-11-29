@@ -1,6 +1,7 @@
 import React from "react"
 import { Dialog, DialogContent, DialogTrigger } from "@blueprint/ui"
-import { Apartment } from "../page"
+import { Apartment } from "@/app/apartment-cards/exampleApartmentData"
+
 
 export function ViewApartment ({ apartment }: { apartment: Apartment }) {
     return (

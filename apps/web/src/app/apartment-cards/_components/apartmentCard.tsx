@@ -13,14 +13,14 @@ import {
     Separator,
 } from "@blueprint/ui";
 
-import { Apartment } from "../page";
+import { Apartment } from "@/app/apartment-cards/exampleApartmentData";
 import PictureCarousel from "./pictureCarousel";
 import PotentialRoommateCarousel from "./potentialRoommateCarousel";
 import { ViewApartment } from "./viewApartmentDetails";
 
 export function ApartmentCard({ apartment }: { apartment: Apartment }) {
     return (
-        <Card className="mx-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
+        <Card className="mx-auto w-full max-w-xs overflow-hidden rounded-lg bg-white shadow-md dark:border-gray-700 dark:bg-gray-800">
             <CardHeader>
                 <div className="flex items-center justify-between bg-white px-4 py-2 dark:bg-gray-800">
                     <CardTitle className="text-lg font-bold text-gray-700 dark:text-gray-200">

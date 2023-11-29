@@ -12,7 +12,7 @@ export async function Nav() {
     const session = await getServerAuthSession();
 
     return (
-        <nav className="container flex items-center justify-between py-4">
+        <nav className="px-6 flex items-center justify-between py-4">
             <div className="flex items-center gap-4">
                 <Link href="/">
                     <Shapes className="h-6 w-6" />

@@ -1,187 +1,236 @@
 import React from "react";
 
-import { ApartmentCard } from "./apartment-cards/apartmentCard";
-// import GoogleMap from "./google-map/_components/google-map";
+import {
+    Button,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+    Input,
+    ScrollArea,
+} from "@blueprint/ui";
 
-
-export interface Roommate {
-    name: string;
-    details: string;
-    image: string;
-}
-
-export interface Apartment {
-    id: number; //This is going to be generated for each list of apartments at the time of fetching the apartment data from the API
-    name: string;
-    bedrooms: number;
-    bathrooms: number;
-    sqft: number;
-    price: number;
-    address: string;
-    city: string;
-    state: string;
-    zip: number;
-    lat: number;
-    lng: number;
-    images: string[];
-    description: string;
-    url: string;
-    dateListed: string;
-    roommates: Roommate[];
-    favorited: boolean;
-    hidden: boolean;
-}
-
-const apartments: Apartment[] = [
-    {
-        id: 1,
-        name: "Apartment 1",
-        bedrooms: 3,
-        bathrooms: 2,
-        sqft: 2521,
-        price: 1263,
-        address: "1334 Main St",
-        city: "Cityville",
-        state: "ST",
-        zip: 55068,
-        lat: 45.679218,
-        lng: -97.592295,
-        images: [
-            "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-            "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-        ],
-        description: "This is a description of Apartment 1. It has all the amenities you need!",
-        url: "https://www.example.com/apartment1",
-        dateListed: "2021-01-09",
-        roommates: [
-            {
-                name: "Roommate A",
-                details: "Description of Roommate A",
-                image: "https://media.istockphoto.com/id/1498250886/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=DGsRdT5klN5dRkUidD-J1N07eOqmdjtdgaELTp0ZTa8=",
-            },
-            {
-                name: "Roommate B",
-                details: "Description of Roommate B",
-                image: "https://media.istockphoto.com/id/1498250877/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=N7g2asUCnI4XtzT6VgTZenR94M6w3DYyPLMcmwoxSCA=",
-            },
-        ],
-        favorited: false,
-        hidden: false,
-    },
-    {
-        id: 2,
-        name: "Apartment 2",
-        bedrooms: 5,
-        bathrooms: 2,
-        sqft: 1215,
-        price: 2164,
-        address: "138 Main St",
-        city: "Cityville",
-        state: "ST",
-        zip: 60063,
-        lat: 40.521549,
-        lng: -110.945731,
-        images: [
-            "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-            "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-        ],
-        description: "This is a description of Apartment 2. It has all the amenities you need!",
-        url: "https://www.example.com/apartment2",
-        dateListed: "2022-02-24",
-        roommates: [
-            {
-                name: "Roommate A",
-                details: "Description of Roommate A",
-                image: "https://media.istockphoto.com/id/1498250886/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=DGsRdT5klN5dRkUidD-J1N07eOqmdjtdgaELTp0ZTa8=",
-            },
-            {
-                name: "Roommate B",
-                details: "Description of Roommate B",
-                image: "https://media.istockphoto.com/id/1498250877/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=N7g2asUCnI4XtzT6VgTZenR94M6w3DYyPLMcmwoxSCA=",
-            },
-        ],
-        favorited: false,
-        hidden: false,
-    },
-    {
-        id: 3,
-        name: "Apartment 3",
-        bedrooms: 3,
-        bathrooms: 2,
-        sqft: 519,
-        price: 3350,
-        address: "1074 Main St",
-        city: "Cityville",
-        state: "ST",
-        zip: 57262,
-        lat: 36.156495,
-        lng: -97.540072,
-        images: [
-            "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-            "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-        ],
-        description: "This is a description of Apartment 3. It has all the amenities you need!",
-        url: "https://www.example.com/apartment3",
-        dateListed: "2022-06-19",
-        roommates: [
-            {
-                name: "Roommate A",
-                details: "Description of Roommate A",
-                image: "https://media.istockphoto.com/id/1498250886/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=DGsRdT5klN5dRkUidD-J1N07eOqmdjtdgaELTp0ZTa8=",
-            },
-            {
-                name: "Roommate B",
-                details: "Description of Roommate B",
-                image: "https://media.istockphoto.com/id/1498250877/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=N7g2asUCnI4XtzT6VgTZenR94M6w3DYyPLMcmwoxSCA=",
-            },
-        ],
-        favorited: false,
-        hidden: false,
-    },
-];
-
-
-// import { LoadScript } from "@react-google-maps/api";
-// import GoogleMapComponent from "./google-map/_components/google-map";
-
-// const App = () => {
-//   return (
-//     <LoadScript googleMapsApiKey="YOUR_API_KEY">
-//       <GoogleMapComponent
-//         lat={...}
-//         lng={...}
-//         zoom={...}
-//         markers={...}
-//         polygons={...}
-//       />
-//     </LoadScript>
-//   );
-// };
-
+import { apartments } from "@/app/apartment-cards/exampleApartmentData";
+import { ApartmentCard } from "./apartment-cards/_components/apartmentCard";
+import GoogleMap from "./google-map/_components/google-map";
+import { exampleCoordinates, polygonCoordinates } from "./google-map/exampleMapData";
 
 export default async function Home() {
     return (
-        <div>
-            <div>
-                we grind convention feat: apartment-card
-                https://github.com/shadcn-ui/ui/blob/main/CONTRIBUTING.md
+        <div className="flex h-screen w-full flex-col px-4 md:flex-row">
+            {/* Map Section */}
+            <div className="flex flex-grow flex-col overflow-hidden rounded-lg bg-white shadow-lg">
+                {/* Search and Filter Bar */}
+                <div className="bg-gray-100 p-4">
+                    {/* Search Bar */}
+                    <Input
+                        type="text"
+                        placeholder="Address, City, Zip Code..."
+                        className="float-left w-1/3 rounded"
+                    ></Input>
+
+                    {/* Price */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline">Price</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuGroup>
+                                <DropdownMenuItem>
+                                    Profile
+                                    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    Billing
+                                    <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    Settings
+                                    <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    Keyboard shortcuts
+                                    <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuGroup>
+                                <DropdownMenuItem>Team</DropdownMenuItem>
+                                <DropdownMenuSub>
+                                    <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+                                    <DropdownMenuPortal>
+                                        <DropdownMenuSubContent>
+                                            <DropdownMenuItem>Email</DropdownMenuItem>
+                                            <DropdownMenuItem>Message</DropdownMenuItem>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem>More...</DropdownMenuItem>
+                                        </DropdownMenuSubContent>
+                                    </DropdownMenuPortal>
+                                </DropdownMenuSub>
+                                <DropdownMenuItem>
+                                    New Team
+                                    <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>GitHub</DropdownMenuItem>
+                            <DropdownMenuItem>Support</DropdownMenuItem>
+                            <DropdownMenuItem disabled>API</DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>
+                                Log out
+                                <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    {/* Bedrooms */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline">Bedrooms</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuGroup>
+                                <DropdownMenuItem>
+                                    Profile
+                                    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    Billing
+                                    <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    Settings
+                                    <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    Keyboard shortcuts
+                                    <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuGroup>
+                                <DropdownMenuItem>Team</DropdownMenuItem>
+                                <DropdownMenuSub>
+                                    <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+                                    <DropdownMenuPortal>
+                                        <DropdownMenuSubContent>
+                                            <DropdownMenuItem>Email</DropdownMenuItem>
+                                            <DropdownMenuItem>Message</DropdownMenuItem>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem>More...</DropdownMenuItem>
+                                        </DropdownMenuSubContent>
+                                    </DropdownMenuPortal>
+                                </DropdownMenuSub>
+                                <DropdownMenuItem>
+                                    New Team
+                                    <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>GitHub</DropdownMenuItem>
+                            <DropdownMenuItem>Support</DropdownMenuItem>
+                            <DropdownMenuItem disabled>API</DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>
+                                Log out
+                                <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    {/* Bathrooms */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline">Bathrooms</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuGroup>
+                                <DropdownMenuItem>
+                                    Profile
+                                    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    Billing
+                                    <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    Settings
+                                    <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    Keyboard shortcuts
+                                    <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuGroup>
+                                <DropdownMenuItem>Team</DropdownMenuItem>
+                                <DropdownMenuSub>
+                                    <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+                                    <DropdownMenuPortal>
+                                        <DropdownMenuSubContent>
+                                            <DropdownMenuItem>Email</DropdownMenuItem>
+                                            <DropdownMenuItem>Message</DropdownMenuItem>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem>More...</DropdownMenuItem>
+                                        </DropdownMenuSubContent>
+                                    </DropdownMenuPortal>
+                                </DropdownMenuSub>
+                                <DropdownMenuItem>
+                                    New Team
+                                    <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>GitHub</DropdownMenuItem>
+                            <DropdownMenuItem>Support</DropdownMenuItem>
+                            <DropdownMenuItem disabled>API</DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>
+                                Log out
+                                <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    {/* Additional filters can be added here */}
+                </div>
+
+                {/* Map */}
+                <div className="flex-grow overflow-hidden rounded-lg">
+                    <GoogleMap
+                        lat={42.3601}
+                        lng={-71.0589}
+                        zoom={13}
+                        markers={exampleCoordinates}
+                        polygons={polygonCoordinates}
+                    />
+                </div>
             </div>
 
-            <div className="w-9/12">
-                <div>Map here:</div>
-                {/* <GoogleMap lat={0} lng={0} zoom={0} markers={[]} polygons={[]} /> */}
-            </div>
-
-            <div className="float-right mr-4">
-                {apartments.map((apartment) => (
-                    <ApartmentCard key={apartment.id} apartment={apartment} />
-                ))}
+            {/* Apartment Listings */}
+            <div className="h-screen w-full overflow-auto md:ml-4 md:w-1/3 lg:w-1/4">
+                <ScrollArea className="h-full">
+                    <div className="grid grid-cols-1 gap-1 md:grid-cols-2">
+                        {apartments.map((apartment) => (
+                            <div key={apartment.id}>
+                                <ApartmentCard apartment={apartment} />
+                            </div>
+                        ))}
+                    </div>
+                </ScrollArea>
             </div>
         </div>
     );
