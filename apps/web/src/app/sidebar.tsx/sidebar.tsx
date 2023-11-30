@@ -27,11 +27,10 @@ export default function Sidebar() {
             <div
                 className={`fixed inset-y-0 left-0 transform ${
                     isOpen ? "translate-x-0" : "-translate-x-full"
-                } z-50 flex w-[1000px] flex-col bg-white shadow-lg transition-transform duration-300 ease-in-out`}
+                } z-50 flex w-5/6 flex-col bg-white shadow-lg transition-transform duration-300 ease-in-out`}
             >
                 {/* Sidebar content */}
                 <div className="flex-1 p-4">
-                    <h1 className="text-2xl font-bold">Sidebar</h1>
                     <SideBarForm />
                 </div>
 
