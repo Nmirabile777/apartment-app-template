@@ -147,4 +147,124 @@ export const apartments: Apartment[] = [
     favorited: false,
     hidden: false,
   },
+  {
+    id: 4,
+    name: "Apartment 4",
+    bedrooms: 3,
+    bathrooms: 2,
+    sqft: 2521,
+    price: 1263,
+    address: "1334 Main St",
+    city: "Cityville",
+    state: "ST",
+    zip: 55068,
+    lat: 45.679218,
+    lng: -97.592295,
+    images: [
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
+    ],
+    description:
+      "This is a description of Apartment 4. It has all the amenities you need!",
+    url: "https://www.example.com/apartment4",
+    dateListed: "2021-01-09",
+    roommates: [
+      {
+        name: "Roommate A",
+        details: "Description of Roommate A",
+        image:
+          "https://media.istockphoto.com/id/1498250886/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=DGsRdT5klN5dRkUidD-J1N07eOqmdjtdgaELTp0ZTa8=",
+      },
+      {
+        name: "Roommate B",
+        details: "Description of Roommate B",
+        image:
+          "https://media.istockphoto.com/id/1498250877/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=N7g2asUCnI4XtzT6VgTZenR94M6w3DYyPLMcmwoxSCA=",
+      },
+    ],
+    favorited: false,
+    hidden: false,
+  },
+  {
+    id: 5,
+    name: "Apartment 5",
+    bedrooms: 3,
+    bathrooms: 2,
+    sqft: 2521,
+    price: 1263,
+    address: "1334 Main St",
+    city: "Cityville",
+    state: "ST",
+    zip: 55068,
+    lat: 45.679218,
+    lng: -97.592295,
+    images: [
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
+    ],
+    description:
+      "This is a description of Apartment 5. It has all the amenities you need!",
+    url: "https://www.example.com/apartment5",
+    dateListed: "2021-01-09",
+    roommates: [
+      {
+        name: "Roommate A",
+        details: "Description of Roommate A",
+        image:
+          "https://media.istockphoto.com/id/1498250886/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=DGsRdT5klN5dRkUidD-J1N07eOqmdjtdgaELTp0ZTa8=",
+      },
+      {
+        name: "Roommate B",
+        details: "Description of Roommate B",
+        image:
+          "https://media.istockphoto.com/id/1498250877/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=N7g2asUCnI4XtzT6VgTZenR94M6w3DYyPLMcmwoxSCA=",
+      },
+    ],
+    favorited: false,
+    hidden: false,
+  },
+  {
+    id: 6,
+    name: "Apartment 6",
+    bedrooms: 3,
+    bathrooms: 2,
+    sqft: 2521,
+    price: 1263,
+    address: "1334 Main St",
+    city: "Cityville",
+    state: "ST",
+    zip: 55068,
+    lat: 45.679218,
+    lng: -97.592295,
+    images: [
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
+    ],
+    description:
+      "This is a description of Apartment 6. It has all the amenities you need!",
+    url: "https://www.example.com/apartment6",
+    dateListed: "2021-01-09",
+    roommates: [
+      {
+        name: "Roommate A",
+        details: "Description of Roommate A",
+        image:
+          "https://media.istockphoto.com/id/1498250886/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=DGsRdT5klN5dRkUidD-J1N07eOqmdjtdgaELTp0ZTa8=",
+      },
+      {
+        name: "Roommate B",
+        details: "Description of Roommate B",
+        image:
+          "https://media.istockphoto.com/id/1498250877/photo/disabled-black-man-using-smartphone-at-home.jpg?s=2048x2048&w=is&k=20&c=N7g2asUCnI4XtzT6VgTZenR94M6w3DYyPLMcmwoxSCA=",
+      },
+    ],
+    favorited: false,
+    hidden: false,
+  },
 ];

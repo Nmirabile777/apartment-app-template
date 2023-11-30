@@ -120,7 +120,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ lat, lng, zoom, markers, polygons
         };
     }, [lat, lng, zoom, markers, polygons, scriptLoaded]);
 
-    return <div ref={googleMapRef} style={{ width: "100%", height: "100%" }} />;
+    return <div ref={googleMapRef} style={{ width: "100%", height: "90%" }} />;
 };
 
 export default GoogleMap;
