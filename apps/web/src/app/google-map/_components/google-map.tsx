@@ -12,8 +12,18 @@ declare global {
         initGoogleMap?: () => void;
     }
 }
-
-const colors = ["#3e4195", "#FF5733", "#33FFCE"];
+const colors = [
+    "#BC8F8F",
+    "#A8D5BA",
+    "#D1C4E9",
+    "#5DA0A2",
+    "#BDC3C7",
+    "#F1C4A1",
+    "#95A5A6",
+    "#C8A2C8",
+    "#E6D690",
+    "#7F8C8D",
+];
 
 type Coordinates = {
     lat: number;

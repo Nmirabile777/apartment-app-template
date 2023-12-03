@@ -1,7 +1,7 @@
 // Our data will be structured as
 // Isochrone(s)
-//↪Polygon(s)
-//↪Coordinates
+//  ↪Polygon(s)
+//    ↪Coordinates
 
 export const exampleCoordinates = [
     { lat: 42.3601, lng: -71.0589 },

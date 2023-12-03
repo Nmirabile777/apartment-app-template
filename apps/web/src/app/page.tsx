@@ -9,7 +9,7 @@ import { exampleCoordinates, polygonCoordinates } from "./google-map/exampleMapD
 import SearchBar from "./searchBar/searchBar";
 import Sidebar from "./sidebar.tsx/sidebar";
 
-export default async function Home() {
+export default function Home() {
     return (
         <div className="flex h-screen w-full flex-col px-4 md:flex-row">
 
@@ -34,7 +34,7 @@ export default async function Home() {
             </div>
 
             {/* Apartments */}
-            <div className="h-screen w-full overflow-auto md:ml-4 md:w-1/3 lg:w-1/4">
+            <div className="h-screen w-full overflow-auto md:ml-4 md:w-1/3 lg:w-1/3">
                 <ScrollArea className="h-full">
                     <div className="grid grid-cols-1 gap-1 md:grid-cols-2">
                         {apartments.map((apartment) => (

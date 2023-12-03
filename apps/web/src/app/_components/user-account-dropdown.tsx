@@ -41,33 +41,25 @@ export function UserAccountDropdown({ user }: Props) {
                     <DropdownMenuItem>
                         <Link
                             className="flex w-full items-center justify-between gap-2"
-                            href="/tasks"
-                        >
-                            <span>Dashboard</span>
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        <Link
-                            className="flex w-full items-center justify-between gap-2"
                             href="/settings"
                         >
                             <span>Settings</span>
                             <GearIcon className="h-4 w-4" />
                         </Link>
                     </DropdownMenuItem>
-                </div>
-                <Separator />
-                <div className="py-1">
                     <DropdownMenuItem className="px-2">
                         <Link
                             className="flex w-full items-center justify-between gap-2"
-                            href="/"
+                            href="/groups"
                             target="_blank"
                         >
-                            <span>Blueprint Homepage</span>
+                            <span>Groups</span>
                             <ExternalLinkIcon className="h-4 w-4" />
                         </Link>
                     </DropdownMenuItem>
+                </div>
+                <Separator />
+                <div className="py-1">
                     <DropdownMenuItem
                         className="px-2"
                         onClick={() => signOut({ callbackUrl: "/" })}

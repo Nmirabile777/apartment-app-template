@@ -18,6 +18,19 @@ export default function SearchBar() {
 
             <div className="float-left ml-2">Sort By:</div>
 
+            {/* Favorited */}
+            <div className="float-left ml-2">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button className="bg-gray-800">Favorited</Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-20">
+                        <DropdownMenuItem>Ascending</DropdownMenuItem>
+                        <DropdownMenuItem>Descending</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+
             {/* Price */}
             <div className="float-left ml-2">
                 <DropdownMenu>
