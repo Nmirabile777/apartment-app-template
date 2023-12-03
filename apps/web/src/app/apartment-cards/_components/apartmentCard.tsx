@@ -18,7 +18,7 @@ import {
 import { Apartment } from "@/app/apartment-cards/exampleApartmentData";
 import PictureCarousel from "./pictureCarousel";
 import PotentialRoommateCarousel from "./potentialRoommateCarousel";
-import { ViewApartment } from "./viewApartmentDetails";
+import { ApartmentDetails } from "./viewApartmentDetails";
 
 export function ApartmentCard({ apartment }: { apartment: Apartment }) {
     const [isFavorited, setIsFavorited] = useState(false);
@@ -87,7 +87,7 @@ export function ApartmentCard({ apartment }: { apartment: Apartment }) {
                     <AccordionItem value="1">
                         <AccordionTrigger>Potential Roomates</AccordionTrigger>
                         <AccordionContent>
-                            <div>
+                            <div className="pb-2">
                                 <PotentialRoommateCarousel roommates={apartment.roommates} />
                             </div>
                         </AccordionContent>
@@ -96,7 +96,7 @@ export function ApartmentCard({ apartment }: { apartment: Apartment }) {
             </CardContent>
 
             <CardFooter>
-                <ViewApartment apartment={apartment} />
+                <ApartmentDetails apartment={apartment} />
             </CardFooter>
         </Card>
     );

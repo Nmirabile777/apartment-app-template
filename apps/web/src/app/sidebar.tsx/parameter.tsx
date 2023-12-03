@@ -13,6 +13,7 @@ import {
 } from "@blueprint/ui";
 
 interface Parameter {
+    parameterName: string;
     searchLocation: string;
     travelTime: string;
     travelMethod: string;
@@ -49,7 +50,7 @@ export default function ParameterCard({ parameters, onRemove }: ParameterProps) 
                     className="my-2 mr-3"
                 >
                     <CardHeader>
-                        <CardTitle>Parameter {index + 1}</CardTitle>
+                        <CardTitle>{param.parameterName}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <CardDescription className="grid grid-cols-2">

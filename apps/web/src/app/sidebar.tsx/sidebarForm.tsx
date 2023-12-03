@@ -2,17 +2,13 @@
 
 import { useState } from "react";
 
-import { toast } from "sonner";
 import * as z from "zod";
 
 import {
     Button,
     Form,
     FormControl,
-    FormDescription,
     FormField,
-    FormGroup,
-    FormGroupTitle,
     FormItem,
     FormLabel,
     FormMessage,
@@ -23,7 +19,6 @@ import {
     SelectContent,
     SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
     Separator,
@@ -31,8 +26,11 @@ import {
     useZodForm,
 } from "@blueprint/ui";
 
+import GroupParameters from "./groupParameters";
 import ParameterCard from "./parameter";
 import YourParameters from "./yourParameters";
+
+type ParameterData = z.infer<typeof FormSchema>;
 
 const FormSchema = z.object({
     parameterName: z.string(),
@@ -43,6 +41,10 @@ const FormSchema = z.object({
     arrivalOrDeparture: z.boolean(),
     ampm: z.string(),
 });
+
+const makeApiCall = async (parameters: z.infer<typeof FormSchema>[]) => {
+    console.log("API Call with parameters:", parameters);
+};
 
 export default function SideBarForm() {
     const form = useZodForm({
@@ -57,28 +59,30 @@ export default function SideBarForm() {
             ampm: "",
         },
     });
+
     const [parameters, setParameters] = useState<z.infer<typeof FormSchema>[]>([]);
 
+    const importParameters = (importedParams: ParameterData[]) => {
+        setParameters((currentParameters) => [...currentParameters, ...importedParams]);
+    };
+
     const onSubmit = (data: z.infer<typeof FormSchema>) => {
-        setParameters((currentParameters) => {
-            if (currentParameters.length < 10) {
-                console.log(data);
-                toast.success("Parameter added");
-                return [...currentParameters, data];
-            } else {
-                toast.error("You can only add up to 10 parameters.");
-                return currentParameters;
-            }
-        });
+        if (parameters.length >= 10) {
+            console.error("Maximum of 10 parameters reached");
+            return;
+        }
+        setParameters((currentParameters) => [...currentParameters, data]);
         form.reset();
+    };
+
+    const handleSearch = async () => {
+        await makeApiCall(parameters);
     };
 
     const handleRemoveParameter = (indexToRemove: number) => {
         setParameters((currentParameters) =>
             currentParameters.filter((_, index) => index !== indexToRemove),
         );
-
-        toast.success("Parameter removed");
     };
 
     return (
@@ -257,7 +261,11 @@ export default function SideBarForm() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" disabled={parameters.length >= 10}>
+                        <Button
+                            type="submit"
+                            onClick={form.handleSubmit(onSubmit)}
+                            disabled={parameters.length > 10}
+                        >
                             Add Parameter →
                         </Button>
                     </form>
@@ -267,20 +275,25 @@ export default function SideBarForm() {
 
                 <h2 className="mb-2 mt-6 font-bold">Or import parameters from you or a group:</h2>
                 <div className="mb-4 flex space-x-2">
-                    <YourParameters />
-                    <Button>Group Parameters</Button>
+                    <YourParameters onImport={importParameters} />
+                    <GroupParameters onImport={importParameters} />
                 </div>
 
                 <Separator className="my-4" />
 
                 <div className="mt-4 flex justify-end">
-                    <Button type="submit">Search</Button>
+                    <Button disabled={parameters.length > 10} onClick={handleSearch}>
+                        Search
+                    </Button>
                 </div>
             </div>
 
             {/* Display Parameters */}
             <div>
-                <h3 className="font-bold">Parameters for this search:</h3>
+                <h3 className={`font-bold ${parameters.length > 10 ? "text-red-600" : ""}`}>
+                    Parameters for this search: ({parameters.length}/10)
+                </h3>
+
                 <ScrollArea className="h-[800px] overflow-auto">
                     <ParameterCard parameters={parameters} onRemove={handleRemoveParameter} />
                 </ScrollArea>

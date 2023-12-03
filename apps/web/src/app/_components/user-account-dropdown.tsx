@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 
 import { ExternalLinkIcon, GearIcon } from "@radix-ui/react-icons";
+import { UserCircle, Users } from "lucide-react";
 import type { User } from "next-auth";
 import { signOut } from "next-auth/react";
 
@@ -38,26 +39,35 @@ export function UserAccountDropdown({ user }: Props) {
                 </div>
                 <Separator />
                 <div className="py-1">
-                    <DropdownMenuItem>
+                    <DropdownMenuItem className="px-2">
                         <Link
                             className="flex w-full items-center justify-between gap-2"
-                            href="/settings"
+                            href="/userProfile"
                         >
-                            <span>Settings</span>
-                            <GearIcon className="h-4 w-4" />
+                            <span>Your Profile</span>
+                            <UserCircle className="h-4 w-4" />
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="px-2">
                         <Link
                             className="flex w-full items-center justify-between gap-2"
                             href="/groups"
-                            target="_blank"
                         >
                             <span>Groups</span>
-                            <ExternalLinkIcon className="h-4 w-4" />
+                            <Users className="h-4 w-4" />
                         </Link>
                     </DropdownMenuItem>
                 </div>
+                <Separator />
+                <DropdownMenuItem>
+                    <Link
+                        className="flex w-full items-center justify-between gap-2"
+                        href="/settings"
+                    >
+                        <span>Account Settings</span>
+                        <GearIcon className="h-4 w-4" />
+                    </Link>
+                </DropdownMenuItem>
                 <Separator />
                 <div className="py-1">
                     <DropdownMenuItem

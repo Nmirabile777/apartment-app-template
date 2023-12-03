@@ -7,6 +7,10 @@ import {
     Alert,
     AlertDescription,
     AlertTitle,
+    Card,
+    CardContent,
+    CardFooter,
+    CardTitle,
     Tabs,
     TabsContent,
     TabsList,
@@ -17,7 +21,7 @@ import { getUserPlan } from "@blueprint/utils";
 import { BillingInfo } from "./_components/billing";
 import { ProfileSettings } from "./_components/profile-settings";
 
-export default async function Settings() {
+export default async function Groups() {
     const session = await getServerAuthSession();
     if (!session) {
         return redirect("/");
@@ -35,7 +39,7 @@ export default async function Settings() {
                 <TabsTrigger value="billing">Billing</TabsTrigger>
             </TabsList>
             <TabsContent value="general" className="w-full md:w-2/3">
-                <h1 className="py-4 text-3xl font-medium">Profile Settings</h1>
+                <h1 className="py-4 text-3xl font-medium">Groups</h1>
                 <ProfileSettings user={session.user} />
             </TabsContent>
             <TabsContent value="billing">
