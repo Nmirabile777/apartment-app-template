@@ -1,3 +1,7 @@
+"use client";
+
+import React, { useState } from "react";
+
 import {
     Button,
     DropdownMenu,
@@ -7,7 +11,15 @@ import {
     Input,
 } from "@blueprint/ui";
 
-export default function SearchBar() {
+interface SearchBarProps {
+    showApartments: boolean;
+    setShowApartments: (show: boolean) => void;
+}
+
+export default function SearchBar({ showApartments, setShowApartments }: SearchBarProps) {
+    const toggleDisplay = () => {
+        setShowApartments(!showApartments);
+    };
     return (
         <div>
             <Input
@@ -68,6 +80,13 @@ export default function SearchBar() {
                         <DropdownMenuItem>Descending</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+            </div>
+
+            {/* Apartments vs Parameters Toggle */}
+            <div className="float-right ml-2">
+                <Button onClick={toggleDisplay} className="bg-gray-800">
+                    {showApartments ? "Show Parameters" : "Show Apartments"}
+                </Button>
             </div>
         </div>
     );

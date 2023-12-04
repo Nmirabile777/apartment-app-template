@@ -30,7 +30,7 @@ export function ApartmentDetails({ apartment }: { apartment: Apartment }) {
     return (
         <Dialog>
             <DialogTrigger>Details</DialogTrigger>
-            <DialogContent className="w-4/5">
+            <DialogContent className="w-96">
                 <DialogHeader>
                     <div className="relative flex items-center justify-between bg-white px-4 py-2 dark:bg-gray-800">
                         <DialogTitle className="text-lg font-bold text-gray-700 dark:text-gray-200">
@@ -93,13 +93,52 @@ export function ApartmentDetails({ apartment }: { apartment: Apartment }) {
                                 <TabsTrigger value="contact">Contact</TabsTrigger>
                             </TabsList>
                             <TabsContent value="general">
-                                <div>General Content</div>
+                                <div className="space-y-2">
+                                    <p>
+                                        <strong>Address:</strong> {apartment.address},{" "}
+                                        {apartment.city}, {apartment.state}, {apartment.zip}
+                                    </p>
+                                    <p>
+                                        <strong>Description:</strong> {apartment.description}
+                                    </p>
+                                    <p>
+                                        <strong>Bedrooms:</strong> {apartment.bedrooms}
+                                    </p>
+                                    <p>
+                                        <strong>Bathrooms:</strong> {apartment.bathrooms}
+                                    </p>
+                                    <p>
+                                        <strong>Square Feet:</strong>{" "}
+                                        {apartment.sqft.toLocaleString()} sqft
+                                    </p>
+                                    <p>
+                                        <strong>Price:</strong> ${apartment.price.toLocaleString()}
+                                    </p>
+                                    <p>
+                                        <strong>Date Listed:</strong> {apartment.dateListed}
+                                    </p>
+                                </div>
                             </TabsContent>
                             <TabsContent value="floorplans">
-                                <div>Floorplans List and Diagrams</div>
+                                <div className="space-y-2"></div>
                             </TabsContent>
                             <TabsContent value="contact">
-                                <div>Contact Content</div>
+                                <div className="space-y-2">
+                                    <p>
+                                        <strong>Address:</strong> {apartment.address},{" "}
+                                        {apartment.city}, {apartment.state}, {apartment.zip}
+                                    </p>
+                                    <p>
+                                        <strong>Contact URL:</strong>{" "}
+                                        <a
+                                            href={apartment.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Inquire about this apartment
+                                        </a>
+                                    </p>
+                                </div>
                             </TabsContent>
                         </Tabs>
                     </div>
@@ -107,8 +146,9 @@ export function ApartmentDetails({ apartment }: { apartment: Apartment }) {
 
                 <DialogFooter>
                     <DialogClose>
-                        
+                        <Button className="mr-4">Close</Button>
                     </DialogClose>
+                    <Button>Contact</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

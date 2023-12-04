@@ -31,7 +31,7 @@ interface Roommate {
 
 const PopUpApartmentCard = ({ apartment }: { apartment: ApartmentInfo }) => {
     return (
-        <div className="my-4 max-w-lg overflow-hidden rounded-lg bg-white shadow-lg">
+        <div className="rounded-lg bg-white shadow-lg">
             <Card>
                 <CardTitle className="p-4 text-xl font-semibold text-gray-800">
                     {apartment.title}

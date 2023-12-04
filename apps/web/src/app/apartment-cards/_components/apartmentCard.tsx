@@ -75,7 +75,7 @@ export function ApartmentCard({ apartment }: { apartment: Apartment }) {
                                 {apartment.zip}
                             </span>
                         </div>
-                        <span className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                        <span className="text-lg font-semibold text-gray-700 dark:text-gray-200 ml-2">
                             ${apartment.price}
                         </span>
                     </div>

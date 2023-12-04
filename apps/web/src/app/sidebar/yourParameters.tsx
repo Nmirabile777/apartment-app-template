@@ -26,9 +26,10 @@ type ParameterData = {
 
 interface ParametersProps {
     onImport: (importedParams: ParameterData[]) => void;
+    parameters: ParameterData[];
 }
 
-export default function YourParameters({ onImport }: ParametersProps) {
+export default function YourParameters({ onImport }: ParametersProps, parameters: ParameterData[]) {
     const exampleParameters: ParameterData[] = [
         {
             parameterName: "Morning Workout",
@@ -96,8 +97,8 @@ export default function YourParameters({ onImport }: ParametersProps) {
     return (
         <div>
             <Dialog>
-                <DialogTrigger className="rounded-md bg-black p-2 text-white">
-                    Your Parameters
+                <DialogTrigger asChild disabled={parameters.length >= 10}>
+                    <Button>Your Parameters</Button>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>Import from your parameters:</DialogHeader>
@@ -114,10 +115,10 @@ export default function YourParameters({ onImport }: ParametersProps) {
                         </div>
                     ))}
                     <DialogFooter className="p-4">
-                        <DialogClose asChild>
+                        <DialogClose>
                             <Button className="mx-2">Close</Button>
+                            <Button onClick={handleImport}>Import</Button>
                         </DialogClose>
-                        <Button onClick={handleImport}>Import</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

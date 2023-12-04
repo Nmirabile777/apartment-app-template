@@ -32,7 +32,7 @@ import YourParameters from "./yourParameters";
 
 type ParameterData = z.infer<typeof FormSchema>;
 
-const FormSchema = z.object({
+export const FormSchema = z.object({
     parameterName: z.string(),
     searchLocation: z.string(),
     travelTime: z.string(),
@@ -46,7 +46,12 @@ const makeApiCall = async (parameters: z.infer<typeof FormSchema>[]) => {
     console.log("API Call with parameters:", parameters);
 };
 
-export default function SideBarForm() {
+interface SidebarProps {
+    parameters: z.infer<typeof FormSchema>[];
+    setParameters: React.Dispatch<React.SetStateAction<z.infer<typeof FormSchema>[]>>;
+}
+
+export default function SideBarForm({ parameters, setParameters }: SidebarProps) {
     const form = useZodForm({
         schema: FormSchema,
         defaultValues: {
@@ -60,8 +65,7 @@ export default function SideBarForm() {
         },
     });
 
-    const [parameters, setParameters] = useState<z.infer<typeof FormSchema>[]>([]);
-
+    
     const importParameters = (importedParams: ParameterData[]) => {
         setParameters((currentParameters) => [...currentParameters, ...importedParams]);
     };
@@ -264,7 +268,7 @@ export default function SideBarForm() {
                         <Button
                             type="submit"
                             onClick={form.handleSubmit(onSubmit)}
-                            disabled={parameters.length > 10}
+                            disabled={parameters.length >= 10}
                         >
                             Add Parameter →
                         </Button>
@@ -275,8 +279,8 @@ export default function SideBarForm() {
 
                 <h2 className="mb-2 mt-6 font-bold">Or import parameters from you or a group:</h2>
                 <div className="mb-4 flex space-x-2">
-                    <YourParameters onImport={importParameters} />
-                    <GroupParameters onImport={importParameters} />
+                    <YourParameters onImport={importParameters} parameters={parameters}/>
+                    <GroupParameters onImport={importParameters} parameters={parameters} />
                 </div>
 
                 <Separator className="my-4" />

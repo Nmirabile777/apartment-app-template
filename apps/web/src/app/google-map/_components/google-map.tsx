@@ -1,8 +1,8 @@
-// GoogleMap.tsx
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
 
+import { isPointInPolygon } from "geolib";
 import ReactDOM from "react-dom";
 
 import { FancyInfoWindowContent } from "@/app/google-map/_components/windowContent";
@@ -54,38 +54,79 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ lat, lng, zoom, markers, polygons
                     streetViewControl: false,
                 });
 
-                markers.forEach((coord) => {
-                    const marker = new google.maps.Marker({
-                        position: coord,
-                        map: map,
-                        icon: {
-                            url: "/images/icon.png",
-                            size: new google.maps.Size(100, 100),
-                            origin: new google.maps.Point(0, 0),
-                            anchor: new google.maps.Point(40, 70),
-                            scaledSize: new google.maps.Size(100, 100),
-                        },
-                    });
+                // Convert polygons to Google Maps format
+                const googlePolygons = polygons.map((polygonGroup) =>
+                    polygonGroup.map(
+                        (polygonCoords) =>
+                            new google.maps.Polygon({
+                                paths: polygonCoords,
+                                strokeOpacity: 0.8,
+                                strokeWeight: 2,
+                                fillOpacity: 0.35,
+                                map: map,
+                            }),
+                    ),
+                );
 
-                    const infoWindow = new google.maps.InfoWindow();
-                    marker.addListener("click", () => {
-                        const infoWindowDiv = document.createElement("div");
-                        ReactDOM.render(
-                            <FancyInfoWindowContent
-                                title="Some Title"
-                                message="Some Message"
-                                onButtonClick={() => console.log("Button clicked!")}
-                            />,
-                            infoWindowDiv,
-                        );
+                const isMarkerInAllPolygonGroups = (marker: Coordinates) => {
+                    for (const polygonGroup of googlePolygons) {
+                        let isInAnyPolygonInGroup = false;
+                        for (const polygon of polygonGroup) {
+                            if (
+                                isPointInPolygon(
+                                    { latitude: marker.lat, longitude: marker.lng },
+                                    polygon
+                                        .getPath()
+                                        .getArray()
+                                        .map((p) => ({ latitude: p.lat(), longitude: p.lng() })),
+                                )
+                            ) {
+                                isInAnyPolygonInGroup = true;
+                                break;
+                            }
+                        }
+                        if (!isInAnyPolygonInGroup) {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+                
 
-                        infoWindow.setContent(infoWindowDiv);
-                        infoWindow.open(map, marker);
-
-                        google.maps.event.addListener(infoWindow, "closeclick", () => {
-                            ReactDOM.unmountComponentAtNode(infoWindowDiv);
+                markers.forEach((marker) => {
+                    if (isMarkerInAllPolygonGroups(marker)) {
+                        const googleMarker = new google.maps.Marker({
+                            position: marker,
+                            map: map,
+                            icon: {
+                                url: "/images/icon.png",
+                                size: new google.maps.Size(100, 100),
+                                origin: new google.maps.Point(0, 0),
+                                anchor: new google.maps.Point(40, 70),
+                                scaledSize: new google.maps.Size(100, 100),
+                            },
                         });
-                    });
+
+                        const infoWindow = new google.maps.InfoWindow();
+                        googleMarker.addListener("click", () => {
+                            const infoWindowDiv = document.createElement("div");
+                            ReactDOM.render(
+                                <FancyInfoWindowContent
+                                    title="Some Title"
+                                    message="Some Message"
+                                    onButtonClick={() => console.log("Button clicked!")}
+                                />,
+                                infoWindowDiv,
+                            );
+
+                            infoWindow.setContent(infoWindowDiv);
+                            infoWindow.open(map, googleMarker);
+
+                            google.maps.event.addListener(infoWindow, "closeclick", () => {
+                                ReactDOM.unmountComponentAtNode(infoWindowDiv);
+                            });
+                        });
+                    }
                 });
 
                 polygons.forEach((polygonGroup, index) => {
@@ -97,7 +138,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ lat, lng, zoom, markers, polygons
                             strokeOpacity: 0.8,
                             strokeWeight: 2,
                             fillColor: color,
-                            fillOpacity: 0.35,
+                            fillOpacity: 0.25,
                             map: map,
                         });
                     });
