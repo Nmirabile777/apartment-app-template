@@ -7,6 +7,7 @@ import {
     Alert,
     AlertDescription,
     AlertTitle,
+    Button,
     Card,
     CardContent,
     CardFooter,
@@ -20,9 +21,9 @@ import {
 } from "@blueprint/ui";
 import { getUserPlan } from "@blueprint/utils";
 
+import UserCard from "@/app/userProfile/_components/userCard";
 import { BillingInfo } from "./_components/billing";
 import { ProfileSettings } from "./_components/profile-settings";
-import UserCard from "@/app/userProfile/_components/userCard";
 
 const exampleUserData = {
     userName: "John Doe",
@@ -52,7 +53,25 @@ export default async function UserProfile() {
                     stuff like that
                 </div>
                 <Label className="mt-2">Occupation: (Current: Aerospace Engineer)</Label>
-                <Input></Input>
+                <div className="flex w-full max-w-sm items-center space-x-2">
+                    <Input type="occupation" placeholder="Occupation" />
+                    <Button type="submit">Update</Button>
+                </div>
+                <Label className="mt-2">Location: (Current: Northborough Area)</Label>
+                <div className="flex w-full max-w-sm items-center space-x-2">
+                    <Input type="location" placeholder="Location" />
+                    <Button type="submit">Update</Button>
+                </div>
+                <Label className="mt-2">Age: (Current: 24)</Label>
+                <div className="flex w-full max-w-sm items-center space-x-2">
+                    <Input type="age" placeholder="Age" />
+                    <Button type="submit">Update</Button>
+                </div>
+                <Label className="mt-2">Profile Picture</Label>
+                <div className="flex w-full max-w-sm items-center space-x-2">
+                    <Input id="picture" type="file" />
+                    <Button type="submit">Update</Button>
+                </div>
             </TabsContent>
             <TabsContent value="preview">
                 <h1 className="py-4 text-3xl font-medium">

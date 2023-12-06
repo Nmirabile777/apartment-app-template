@@ -7,6 +7,7 @@ import {
     Alert,
     AlertDescription,
     AlertTitle,
+    Button,
     Card,
     CardContent,
     CardFooter,
@@ -17,9 +18,7 @@ import {
     TabsTrigger,
 } from "@blueprint/ui";
 import { getUserPlan } from "@blueprint/utils";
-
-import { BillingInfo } from "./_components/billing";
-import { ProfileSettings } from "./_components/profile-settings";
+import GroupCard from "./_components/groupCard";
 
 export default async function Groups() {
     const session = await getServerAuthSession();
@@ -33,25 +32,19 @@ export default async function Groups() {
         isCanceled = stripePlan.cancel_at_period_end;
     }
     return (
-        <Tabs className="container" defaultValue="general">
+        <Tabs className="container" defaultValue="create">
             <TabsList>
-                <TabsTrigger value="general">General</TabsTrigger>
-                <TabsTrigger value="billing">Billing</TabsTrigger>
+                <TabsTrigger value="create">Create a Group</TabsTrigger>
+                <TabsTrigger value="yourgroups">Your Groups</TabsTrigger>
             </TabsList>
-            <TabsContent value="general" className="w-full md:w-2/3">
+            <TabsContent value="create" className="w-full md:w-2/3">
                 <h1 className="py-4 text-3xl font-medium">Groups</h1>
-                <ProfileSettings user={session.user} />
+                <div>Create a group here:</div>
+                <Button>+ Create Group</Button>
             </TabsContent>
-            <TabsContent value="billing">
-                <h1 className="py-4 text-3xl font-medium">Billing Settings</h1>
-                <Alert className="mb-2" variant="info">
-                    <AlertTitle>Blueprint billing is in test-mode</AlertTitle>
-                    <AlertDescription>
-                        You will not be charged. Please use one of the Stripe test cards to test the
-                        billing system.
-                    </AlertDescription>
-                </Alert>
-                <BillingInfo isCanceled={isCanceled} subscription={subscription} />
+            <TabsContent value="yourgroups">
+                <h1 className="py-4 text-3xl font-medium">Your Groups</h1>
+                <GroupCard />
             </TabsContent>
         </Tabs>
     );

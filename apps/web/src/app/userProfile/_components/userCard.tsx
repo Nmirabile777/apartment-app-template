@@ -36,7 +36,7 @@ export default function UserCard() {
                     </Avatar>
                 </CardHeader>
                 <CardContent>
-                    <div>Works Near: Northborough</div>
+                    <div>Works Near: Northborough Area</div>
                     <div>Age: 24</div>
                 </CardContent>
                 <CardFooter className="flex justify-between p-4">
