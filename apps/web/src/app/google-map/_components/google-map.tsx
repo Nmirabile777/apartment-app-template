@@ -38,10 +38,54 @@ type GoogleMapProps = {
     zoom: number;
     markers: Coordinates[];
     polygons: PolygonCoordinates;
+    visiblePolygons: boolean[];
 };
 
-const GoogleMap: React.FC<GoogleMapProps> = ({ lat, lng, zoom, markers, polygons }) => {
+const GoogleMap: React.FC<GoogleMapProps> = ({
+    lat,
+    lng,
+    zoom,
+    markers,
+    polygons,
+    visiblePolygons,
+}) => {
     const googleMapRef = useRef<HTMLDivElement>(null);
+    const [googleMap, setGoogleMap] = useState<google.maps.Map>();
+    const [googlePolygons, setGooglePolygons] = useState<google.maps.Polygon[][]>([]);
+    useEffect(() => {
+        if (googleMap && polygons.length) {
+            const newGooglePolygons = polygons.map((polygonGroup, groupIndex) =>
+                polygonGroup.map(
+                    (polygonCoords) =>
+                        new google.maps.Polygon({
+                            paths: polygonCoords,
+                            strokeOpacity: 0.8,
+                            strokeWeight: 2,
+                            fillOpacity: 0.35,
+                            fillColor: colors[groupIndex % colors.length],
+                            map: googleMap,
+                        }),
+                ),
+            );
+            setGooglePolygons(newGooglePolygons);
+        }
+    }, [googleMap, polygons]);
+
+    // const toggleParameterVisibility = (index: number) => {
+    //     setVisibleParameters((v) => v.map((visible, i) => (i === index ? !visible : visible)));
+    // };
+
+    useEffect(() => {
+        if (googleMap && googlePolygons.length) {
+            googlePolygons.forEach((polygonGroup, index) => {
+                const isVisible = visiblePolygons[index];
+                polygonGroup?.forEach((polygon) => {
+                    polygon.setMap(isVisible ? googleMap : null);
+                });
+            });
+        }
+    }, [visiblePolygons, googlePolygons, googleMap]);
+
     const [scriptLoaded, setScriptLoaded] = useState(false);
 
     useEffect(() => {
@@ -54,22 +98,30 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ lat, lng, zoom, markers, polygons
                     streetViewControl: false,
                 });
 
-                // Convert polygons to Google Maps format
-                const googlePolygons = polygons.map((polygonGroup) =>
-                    polygonGroup.map(
-                        (polygonCoords) =>
-                            new google.maps.Polygon({
-                                paths: polygonCoords,
-                                strokeOpacity: 0.8,
-                                strokeWeight: 2,
-                                fillOpacity: 0.35,
-                                map: map,
-                            }),
-                    ),
-                );
+                const googlePolygons = polygons.map((polygonGroup, groupIndex) => {
+                    if (visiblePolygons[groupIndex]) {
+                        return polygonGroup.map(
+                            (polygonCoords) =>
+                                new google.maps.Polygon({
+                                    paths: polygonCoords,
+                                    strokeOpacity: 0.8,
+                                    strokeWeight: 0.5,
+                                    fillOpacity: 0.45,
+                                    fillColor: colors[groupIndex % colors.length],
+                                    map: map,
+                                }),
+                        );
+                    }
+                    return null;
+                });
 
-                const isMarkerInAllPolygonGroups = (marker: Coordinates) => {
+                const isMarkerInAllPolygonGroups = (
+                    marker: { lat: any; lng: any },
+                    googlePolygons: (google.maps.Polygon[] | null)[],
+                ) => {
                     for (const polygonGroup of googlePolygons) {
+                        if (!polygonGroup) continue;
+
                         let isInAnyPolygonInGroup = false;
                         for (const polygon of polygonGroup) {
                             if (
@@ -78,23 +130,26 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ lat, lng, zoom, markers, polygons
                                     polygon
                                         .getPath()
                                         .getArray()
-                                        .map((p) => ({ latitude: p.lat(), longitude: p.lng() })),
+                                        .map((p: { lat: () => any; lng: () => any }) => ({
+                                            latitude: p.lat(),
+                                            longitude: p.lng(),
+                                        })),
                                 )
                             ) {
                                 isInAnyPolygonInGroup = true;
                                 break;
                             }
                         }
+
                         if (!isInAnyPolygonInGroup) {
                             return false;
                         }
                     }
                     return true;
                 };
-                
 
                 markers.forEach((marker) => {
-                    if (isMarkerInAllPolygonGroups(marker)) {
+                    if (isMarkerInAllPolygonGroups(marker, googlePolygons)) {
                         const googleMarker = new google.maps.Marker({
                             position: marker,
                             map: map,
@@ -127,21 +182,6 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ lat, lng, zoom, markers, polygons
                             });
                         });
                     }
-                });
-
-                polygons.forEach((polygonGroup, index) => {
-                    const color = colors[index % colors.length];
-                    polygonGroup.forEach((polygonCoords) => {
-                        new google.maps.Polygon({
-                            paths: polygonCoords,
-                            strokeColor: color,
-                            strokeOpacity: 0.8,
-                            strokeWeight: 2,
-                            fillColor: color,
-                            fillOpacity: 0.25,
-                            map: map,
-                        });
-                    });
                 });
             }
         };

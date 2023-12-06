@@ -65,22 +65,25 @@ export default function SideBarForm({ parameters, setParameters }: SidebarProps)
         },
     });
 
-    
+    const [localParameters, setLocalParameters] = useState<ParameterData[]>([]);
+
     const importParameters = (importedParams: ParameterData[]) => {
         setParameters((currentParameters) => [...currentParameters, ...importedParams]);
     };
 
     const onSubmit = (data: z.infer<typeof FormSchema>) => {
-        if (parameters.length >= 10) {
+        if (localParameters.length >= 10) {
             console.error("Maximum of 10 parameters reached");
             return;
         }
-        setParameters((currentParameters) => [...currentParameters, data]);
+        setLocalParameters([...localParameters, data]);
         form.reset();
     };
 
     const handleSearch = async () => {
-        await makeApiCall(parameters);
+        await makeApiCall(localParameters);
+        console.log("Submitted Data:", localParameters);
+        setParameters(localParameters);
     };
 
     const handleRemoveParameter = (indexToRemove: number) => {
@@ -266,9 +269,9 @@ export default function SideBarForm({ parameters, setParameters }: SidebarProps)
                             )}
                         />
                         <Button
-                            type="submit"
+                            type="button"
                             onClick={form.handleSubmit(onSubmit)}
-                            disabled={parameters.length >= 10}
+                            disabled={localParameters.length >= 10}
                         >
                             Add Parameter →
                         </Button>
@@ -279,14 +282,14 @@ export default function SideBarForm({ parameters, setParameters }: SidebarProps)
 
                 <h2 className="mb-2 mt-6 font-bold">Or import parameters from you or a group:</h2>
                 <div className="mb-4 flex space-x-2">
-                    <YourParameters onImport={importParameters} parameters={parameters}/>
-                    <GroupParameters onImport={importParameters} parameters={parameters} />
+                    <YourParameters onImport={importParameters} parameters={localParameters} />
+                    <GroupParameters onImport={importParameters} parameters={localParameters} />
                 </div>
 
                 <Separator className="my-4" />
 
                 <div className="mt-4 flex justify-end">
-                    <Button disabled={parameters.length > 10} onClick={handleSearch}>
+                    <Button disabled={localParameters.length === 0} onClick={handleSearch}>
                         Search
                     </Button>
                 </div>
@@ -295,11 +298,11 @@ export default function SideBarForm({ parameters, setParameters }: SidebarProps)
             {/* Display Parameters */}
             <div>
                 <h3 className={`font-bold ${parameters.length > 10 ? "text-red-600" : ""}`}>
-                    Parameters for this search: ({parameters.length}/10)
+                    Parameters for new search: ({localParameters.length}/10)
                 </h3>
 
                 <ScrollArea className="h-[800px] overflow-auto">
-                    <ParameterCard parameters={parameters} onRemove={handleRemoveParameter} />
+                    <ParameterCard parameters={localParameters} onRemove={handleRemoveParameter} />
                 </ScrollArea>
             </div>
         </div>

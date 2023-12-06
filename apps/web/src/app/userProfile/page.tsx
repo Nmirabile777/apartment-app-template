@@ -11,6 +11,8 @@ import {
     CardContent,
     CardFooter,
     CardTitle,
+    Input,
+    Label,
     Tabs,
     TabsContent,
     TabsList,
@@ -20,6 +22,11 @@ import { getUserPlan } from "@blueprint/utils";
 
 import { BillingInfo } from "./_components/billing";
 import { ProfileSettings } from "./_components/profile-settings";
+import UserCard from "@/app/userProfile/_components/userCard";
+
+const exampleUserData = {
+    userName: "John Doe",
+};
 
 export default async function UserProfile() {
     const session = await getServerAuthSession();
@@ -40,11 +47,19 @@ export default async function UserProfile() {
             </TabsList>
             <TabsContent value="publicprofile" className="w-full md:w-2/3">
                 <h1 className="py-4 text-3xl font-medium">Customize Your Public Profile</h1>
-                <div>Looking for a roommate? checkbox, this will show a big customization menu...etc stuff like that</div>
+                <div>
+                    Looking for a roommate? checkbox, this will show a big customization menu...etc
+                    stuff like that
+                </div>
+                <Label className="mt-2">Occupation: (Current: Aerospace Engineer)</Label>
+                <Input></Input>
             </TabsContent>
             <TabsContent value="preview">
-                <h1 className="py-4 text-3xl font-medium">This is how you will be seen by others</h1>
-                
+                <h1 className="py-4 text-3xl font-medium">
+                    This is how you will be seen by others
+                </h1>
+                <div>Example user card:</div>
+                <UserCard />
             </TabsContent>
         </Tabs>
     );

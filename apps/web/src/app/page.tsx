@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+import * as z from "zod";
 
 import { ScrollArea } from "@blueprint/ui";
 
@@ -12,12 +14,26 @@ import ParameterMenu from "./parameterMenu/parameterMenu";
 import SearchBar from "./searchBar/searchBar";
 import Sidebar from "./sidebar/sidebar";
 import { FormSchema } from "./sidebar/sidebarForm";
-import * as z from "zod";
 
 export default function Home() {
-
     const [parameters, setParameters] = useState<z.infer<typeof FormSchema>[]>([]);
+    const [visibleParameters, setVisibleParameters] = useState<boolean[]>(
+        new Array(parameters.length).fill(true),
+    );
 
+    const toggleParameterVisibility = (index: number) => {
+        setVisibleParameters((currentVisibleParameters) =>
+            currentVisibleParameters.map((isVisible, i) => (i === index ? !isVisible : isVisible)),
+        );
+    };
+
+    useEffect(() => {
+        setVisibleParameters(new Array(parameters.length).fill(true));
+    }, [parameters]);
+
+    const mappedPolygons = parameters.map(
+        (_, index) => polygonCoordinates[index % polygonCoordinates.length],
+    );
 
     const [showApartments, setShowApartments] = useState(true);
 
@@ -41,7 +57,8 @@ export default function Home() {
                         lng={-71.0589}
                         zoom={13}
                         markers={exampleCoordinates}
-                        polygons={polygonCoordinates}
+                        polygons={mappedPolygons}
+                        visiblePolygons={visibleParameters}
                     />
                 </div>
             </div>
@@ -59,7 +76,11 @@ export default function Home() {
                                 ))}
                             </div>
                         ) : (
-                            <ParameterMenu parameters={parameters}/>
+                            <ParameterMenu
+                                parameters={parameters}
+                                toggleVisibility={toggleParameterVisibility}
+                                visibleParameters={visibleParameters}
+                            />
                         )}
                     </ScrollArea>
                 </div>
