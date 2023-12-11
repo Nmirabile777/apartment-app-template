@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
+import { isPointInPolygon } from "geolib";
 import * as z from "zod";
 
 import { ScrollArea } from "@blueprint/ui";
 
-import { apartments } from "@/app/apartment-cards/exampleApartmentData";
+import { Apartment, apartments } from "@/app/apartment-cards/exampleApartmentData";
 import { ApartmentCard } from "./apartment-cards/_components/apartmentCard";
 import GoogleMap from "./google-map/_components/google-map";
 import { exampleCoordinates, polygonCoordinates } from "./google-map/exampleMapData";
@@ -36,6 +37,31 @@ export default function Home() {
     );
 
     const [showApartments, setShowApartments] = useState(true);
+
+    const isApartmentInsideVisiblePolygons = useCallback(
+        (apartment: Apartment): boolean => {
+            // Check if the apartment is inside a subpolygon of each visible main polygon
+            return mappedPolygons.every((mainPolygon, index) => {
+                // Skip the check for invisible polygons
+                if (!visibleParameters[index]) return true;
+
+                // Check if the apartment is inside any of the subpolygons of the current visible main polygon
+                return mainPolygon.some((subPolygon) => {
+                    const geolibSubPolygon = subPolygon.map((point) => ({
+                        latitude: point.lat,
+                        longitude: point.lng,
+                    }));
+
+                    // Check if the apartment is inside the current subpolygon
+                    return isPointInPolygon(
+                        { latitude: apartment.lat, longitude: apartment.lng },
+                        geolibSubPolygon,
+                    );
+                });
+            });
+        },
+        [mappedPolygons, visibleParameters],
+    );
 
     return (
         <div className="flex h-screen w-full flex-col px-2 md:flex-row">
@@ -69,11 +95,13 @@ export default function Home() {
                     <ScrollArea className="h-full">
                         {showApartments ? (
                             <div className="grid grid-cols-1 gap-1 md:grid-cols-2">
-                                {apartments.map((apartment) => (
-                                    <div key={apartment.id}>
-                                        <ApartmentCard apartment={apartment} />
-                                    </div>
-                                ))}
+                                {apartments
+                                    .filter(isApartmentInsideVisiblePolygons)
+                                    .map((apartment) => (
+                                        <div key={apartment.id}>
+                                            <ApartmentCard apartment={apartment} />
+                                        </div>
+                                    ))}
                             </div>
                         ) : (
                             <ParameterMenu
