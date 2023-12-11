@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { isPointInPolygon } from "geolib";
 import ReactDOM from "react-dom";
@@ -12,6 +10,7 @@ declare global {
         initGoogleMap?: () => void;
     }
 }
+
 const colors = [
     "#BC8F8F",
     "#A8D5BA",
@@ -32,14 +31,14 @@ type Coordinates = {
 
 type PolygonCoordinates = Coordinates[][][];
 
-type GoogleMapProps = {
+interface GoogleMapProps {
     lat: number;
     lng: number;
     zoom: number;
     markers: Coordinates[];
     polygons: PolygonCoordinates;
     visiblePolygons: boolean[];
-};
+}
 
 const GoogleMap: React.FC<GoogleMapProps> = ({
     lat,
@@ -51,9 +50,47 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
 }) => {
     const googleMapRef = useRef<HTMLDivElement>(null);
     const [googleMap, setGoogleMap] = useState<google.maps.Map>();
-    const [googlePolygons, setGooglePolygons] = useState<google.maps.Polygon[][]>([]);
+    const googlePolygonsRef = useRef<google.maps.Polygon[][]>([]);
+
+    const markersRef = useRef<google.maps.Marker[]>([]);
+    const clearMarkers = () => {
+        markersRef.current.forEach((marker) => marker.setMap(null));
+        markersRef.current = [];
+    };
+
+    // Function to initialize the map
+    const initMap = useCallback(() => {
+        const map = new google.maps.Map(googleMapRef.current!, {
+            center: { lat, lng },
+            zoom,
+            scrollwheel: true,
+            streetViewControl: false,
+        });
+        setGoogleMap(map);
+    }, [lat, lng, zoom]);
+
+    // Load the Google Maps script
     useEffect(() => {
-        if (googleMap && polygons.length) {
+        if (window.google && !googleMap) {
+            initMap();
+        } else if (!window.google) {
+            const script = document.createElement("script");
+            script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAwtbycn3l16COzlzrOLZUd9aqnpGvbQ0I&callback=initGoogleMap`;
+            script.async = true;
+            script.defer = true;
+            document.body.appendChild(script);
+            window.initGoogleMap = initMap;
+
+            return () => {
+                document.body.removeChild(script);
+                window.initGoogleMap = undefined;
+            };
+        }
+    }, [initMap, googleMap]);
+
+    // Create polygons
+    useEffect(() => {
+        if (googleMap && polygons.length && !googlePolygonsRef.current.length) {
             const newGooglePolygons = polygons.map((polygonGroup, groupIndex) =>
                 polygonGroup.map(
                     (polygonCoords) =>
@@ -63,153 +100,101 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
                             strokeWeight: 2,
                             fillOpacity: 0.35,
                             fillColor: colors[groupIndex % colors.length],
-                            map: googleMap,
+                            map: visiblePolygons[groupIndex] ? googleMap : null,
                         }),
                 ),
             );
-            setGooglePolygons(newGooglePolygons);
+
+            googlePolygonsRef.current = newGooglePolygons;
         }
-    }, [googleMap, polygons]);
+    }, [googleMap, polygons, visiblePolygons]);
 
-    // const toggleParameterVisibility = (index: number) => {
-    //     setVisibleParameters((v) => v.map((visible, i) => (i === index ? !visible : visible)));
-    // };
-
+    // Update polygons visibility
     useEffect(() => {
-        if (googleMap && googlePolygons.length) {
-            googlePolygons.forEach((polygonGroup, index) => {
+        if (googleMap && googlePolygonsRef.current.length) {
+            googlePolygonsRef.current.forEach((polygonGroup, index) => {
                 const isVisible = visiblePolygons[index];
-                polygonGroup?.forEach((polygon) => {
+                polygonGroup.forEach((polygon) => {
                     polygon.setMap(isVisible ? googleMap : null);
                 });
             });
         }
-    }, [visiblePolygons, googlePolygons, googleMap]);
+    }, [visiblePolygons, googleMap]);
 
-    const [scriptLoaded, setScriptLoaded] = useState(false);
+    // Function to check if a marker is inside all visible polygons
+    const isMarkerInsideAllVisiblePolygons = useCallback(
+        (marker: Coordinates): boolean => {
+            // Iterate over all polygon groups
+            return googlePolygonsRef.current.every((polygonGroup, index) => {
+                // Only check for groups that are visible
+                if (!visiblePolygons[index]) return true;
 
+                // Check if the marker is inside any polygon in the group
+                return polygonGroup.some((polygon) => {
+                    const geolibPolygon = polygon
+                        .getPath()
+                        .getArray()
+                        .map((p) => ({
+                            latitude: p.lat(),
+                            longitude: p.lng(),
+                        }));
+
+                    return isPointInPolygon(
+                        { latitude: marker.lat, longitude: marker.lng },
+                        geolibPolygon,
+                    );
+                });
+            });
+        },
+        [visiblePolygons],
+    );
+
+    // Markers and Info Windows
     useEffect(() => {
-        const initMap = () => {
-            if (googleMapRef.current) {
-                const map = new google.maps.Map(googleMapRef.current, {
-                    center: { lat, lng },
-                    zoom,
-                    scrollwheel: true,
-                    streetViewControl: false,
-                });
+        if (!googleMap || markers.length === 0 || googlePolygonsRef.current.length === 0) {
+            clearMarkers();
+            return;
+        }
+        if (googleMap && markers.length && googlePolygonsRef.current.length) {
+            clearMarkers();
+            markers.forEach((marker) => {
+                if (isMarkerInsideAllVisiblePolygons(marker)) {
+                    const googleMarker = new google.maps.Marker({
+                        position: marker,
+                        map: googleMap,
+                        icon: {
+                            url: "/images/icon.png",
+                            size: new google.maps.Size(100, 100),
+                            origin: new google.maps.Point(0, 0),
+                            anchor: new google.maps.Point(40, 70),
+                            scaledSize: new google.maps.Size(100, 100),
+                        },
+                    });
 
-                const googlePolygons = polygons.map((polygonGroup, groupIndex) => {
-                    if (visiblePolygons[groupIndex]) {
-                        return polygonGroup.map(
-                            (polygonCoords) =>
-                                new google.maps.Polygon({
-                                    paths: polygonCoords,
-                                    strokeOpacity: 0.8,
-                                    strokeWeight: 0.5,
-                                    fillOpacity: 0.45,
-                                    fillColor: colors[groupIndex % colors.length],
-                                    map: map,
-                                }),
+                    const infoWindow = new google.maps.InfoWindow();
+                    googleMarker.addListener("click", () => {
+                        const infoWindowDiv = document.createElement("div");
+                        ReactDOM.render(
+                            <FancyInfoWindowContent
+                                title="Some Title"
+                                message="Some Message"
+                                onButtonClick={() => console.log("Button clicked!")}
+                            />,
+                            infoWindowDiv,
                         );
-                    }
-                    return null;
-                });
 
-                const isMarkerInAllPolygonGroups = (
-                    marker: { lat: any; lng: any },
-                    googlePolygons: (google.maps.Polygon[] | null)[],
-                ) => {
-                    for (const polygonGroup of googlePolygons) {
-                        if (!polygonGroup) continue;
+                        infoWindow.setContent(infoWindowDiv);
+                        infoWindow.open(googleMap, googleMarker);
 
-                        let isInAnyPolygonInGroup = false;
-                        for (const polygon of polygonGroup) {
-                            if (
-                                isPointInPolygon(
-                                    { latitude: marker.lat, longitude: marker.lng },
-                                    polygon
-                                        .getPath()
-                                        .getArray()
-                                        .map((p: { lat: () => any; lng: () => any }) => ({
-                                            latitude: p.lat(),
-                                            longitude: p.lng(),
-                                        })),
-                                )
-                            ) {
-                                isInAnyPolygonInGroup = true;
-                                break;
-                            }
-                        }
-
-                        if (!isInAnyPolygonInGroup) {
-                            return false;
-                        }
-                    }
-                    return true;
-                };
-
-                markers.forEach((marker) => {
-                    if (isMarkerInAllPolygonGroups(marker, googlePolygons)) {
-                        const googleMarker = new google.maps.Marker({
-                            position: marker,
-                            map: map,
-                            icon: {
-                                url: "/images/icon.png",
-                                size: new google.maps.Size(100, 100),
-                                origin: new google.maps.Point(0, 0),
-                                anchor: new google.maps.Point(40, 70),
-                                scaledSize: new google.maps.Size(100, 100),
-                            },
+                        google.maps.event.addListener(infoWindow, "closeclick", () => {
+                            ReactDOM.unmountComponentAtNode(infoWindowDiv);
                         });
-
-                        const infoWindow = new google.maps.InfoWindow();
-                        googleMarker.addListener("click", () => {
-                            const infoWindowDiv = document.createElement("div");
-                            ReactDOM.render(
-                                <FancyInfoWindowContent
-                                    title="Some Title"
-                                    message="Some Message"
-                                    onButtonClick={() => console.log("Button clicked!")}
-                                />,
-                                infoWindowDiv,
-                            );
-
-                            infoWindow.setContent(infoWindowDiv);
-                            infoWindow.open(map, googleMarker);
-
-                            google.maps.event.addListener(infoWindow, "closeclick", () => {
-                                ReactDOM.unmountComponentAtNode(infoWindowDiv);
-                            });
-                        });
-                    }
-                });
-            }
-        };
-
-        if (!scriptLoaded) {
-            const script = document.createElement("script");
-            script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAwtbycn3l16COzlzrOLZUd9aqnpGvbQ0I&callback=initGoogleMap`;
-            script.async = true;
-            script.defer = true;
-            script.onload = () => setScriptLoaded(true);
-            script.onerror = () => console.error("Google Maps script failed to load.");
-            document.body.appendChild(script);
-
-            return () => {
-                document.body.removeChild(script);
-            };
+                    });
+                    markersRef.current.push(googleMarker);
+                }
+            });
         }
-
-        window.initGoogleMap = initMap;
-
-        if (scriptLoaded) {
-            initMap();
-        }
-
-        return () => {
-            window.initGoogleMap = undefined;
-        };
-    }, [lat, lng, zoom, markers, polygons, scriptLoaded]);
+    }, [googleMap, markers, visiblePolygons]);
 
     return <div ref={googleMapRef} style={{ width: "100%", height: "90%" }} />;
 };
