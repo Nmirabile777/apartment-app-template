@@ -30,7 +30,7 @@ export function ApartmentDetails({ apartment }: { apartment: Apartment }) {
     return (
         <Dialog>
             <DialogTrigger>Details</DialogTrigger>
-            <DialogContent className="w-96">
+            <DialogContent className="w-1/2 h-4/5">
                 <DialogHeader>
                     <div className="relative flex items-center justify-between bg-white px-4 py-2 dark:bg-gray-800">
                         <DialogTitle className="text-lg font-bold text-gray-700 dark:text-gray-200">

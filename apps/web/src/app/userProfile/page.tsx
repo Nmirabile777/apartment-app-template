@@ -23,7 +23,8 @@ import { getUserPlan } from "@blueprint/utils";
 
 import UserCard from "@/app/userProfile/_components/userCard";
 import { BillingInfo } from "./_components/billing";
-import { ProfileSettings } from "./_components/profile-settings";
+// import  ProfileSettings  from "./_components/profile-settings";
+import  UserDashboard  from "./_components/userDashboard";
 
 const exampleUserData = {
     userName: "John Doe",
@@ -46,9 +47,12 @@ export default async function UserProfile() {
                 <TabsTrigger value="publicprofile">Public Profile</TabsTrigger>
                 <TabsTrigger value="preview">Preview</TabsTrigger>
             </TabsList>
-            <TabsContent value="publicprofile" className="w-full md:w-2/3">
+            <TabsContent value="publicprofile" className="w-full">
                 <h1 className="py-4 text-3xl font-medium">Customize Your Public Profile</h1>
-                <div>
+                <UserDashboard />
+
+
+                {/* <div>
                     Looking for a roommate? checkbox, this will show a big customization menu...etc
                     stuff like that
                 </div>
@@ -71,7 +75,7 @@ export default async function UserProfile() {
                 <div className="flex w-full max-w-sm items-center space-x-2">
                     <Input id="picture" type="file" />
                     <Button type="submit">Update</Button>
-                </div>
+                </div> */}
             </TabsContent>
             <TabsContent value="preview">
                 <h1 className="py-4 text-3xl font-medium">
