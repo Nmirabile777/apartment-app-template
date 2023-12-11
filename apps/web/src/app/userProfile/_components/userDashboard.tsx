@@ -1,5 +1,3 @@
-import { SVGProps } from "react";
-
 import {
     Accordion,
     AccordionContent,
@@ -20,8 +18,8 @@ import {
     DialogTrigger,
     Input,
     Label,
-    ScrollArea,
     Separator,
+    Switch,
 } from "@blueprint/ui";
 
 const friends = [
@@ -31,9 +29,9 @@ const friends = [
 ];
 
 const groups = [
-    { name: "Hopkinton Gang", members: ["Jack", "Brian", "Justin"] },
-    { name: "Clarkson Bois", members: ["Erik", "Dom", "Evan"] },
-    { name: "Kyle and Tom", members: ["Tom", "Kyle"] },
+    { name: "Hopkinton Gang", members: ["Jack Quinlan", "Brian Giusti", "Justin Blanchard"] },
+    { name: "Clarkson Bois", members: ["Erik Brown", "Dom Romano", "Evan Nyguen"] },
+    { name: "Kyle and Tom", members: ["Tom Mirabile", "Kyle Heavey"] },
 ];
 
 interface HeaderProps {
@@ -82,13 +80,10 @@ function GroupsList() {
         <>
             {groups.map((group, index) => (
                 <Card key={index}>
-                    <CardHeader>
-                        <GroupIcon className="h-10 w-10" />
-                    </CardHeader>
+                    <CardHeader>{group.name}</CardHeader>
                     <CardContent>
-                        <CardTitle>{group.name}</CardTitle>
                         <Accordion type="single" collapsible className="w-full">
-                            <AccordionItem value="item-1">
+                            <AccordionItem value={`item-${index}`}>
                                 <AccordionTrigger>
                                     <CardDescription>
                                         {group.members.length} members
@@ -110,14 +105,9 @@ function GroupsList() {
     );
 }
 
-function GroupIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-    // GroupIcon component as in the original code
-    return <div></div>;
-}
-
 export default function Component() {
     return (
-        <div className="mx-auto grid min-h-screen w-full gap-8 p-4 md:p-6 lg:grid-cols-3 lg:p-10">
+        <div className="mx-auto grid  w-full gap-8 p-4 md:p-6 lg:grid-cols-3 lg:p-10">
             <UserProfileSection />
             <FriendsAndGroupsSection />
         </div>
@@ -129,8 +119,15 @@ function UserProfileSection() {
         <div className="space-y-6 rounded-lg bg-white p-6 shadow-lg">
             <Header title="User Profile" buttonText="Edit Profile" />
             <div className="flex flex-col">
-                <AvatarSection name="John Doe" email="johndoe@example.com" />
+                <AvatarSection name="Nicholas Mirabile" email="nickmirabile777@gmail.com" />
                 <Separator className="mt-2" />
+
+                {/* Looking for a roommate */}
+                <Label className="mt-4" htmlFor="lookingforroommate">
+                    Looking for a Roommate?
+                </Label>
+                <div className="text-sm">(Allows other members to contact you)</div>
+                <Switch id="lookingforroommate" />
 
                 {/* Occupation */}
                 <Label className="mt-4">Occupation: (Current: Aerospace Engineer)</Label>
@@ -194,7 +191,7 @@ function AvatarSection({ name, email }: AvatarSectionProps) {
             <DialogTrigger>
                 <div className="grid place-items-center">
                     <Avatar className="h-24 w-24">
-                        <AvatarImage alt="User avatar" src="/placeholder-avatar.jpg" />
+                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                         <AvatarFallback>JP</AvatarFallback>
                     </Avatar>
                     <h2 className="mt-4 text-lg font-semibold">{name}</h2>

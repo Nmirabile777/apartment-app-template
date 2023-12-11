@@ -16,6 +16,8 @@ import SearchBar from "./searchBar/searchBar";
 import Sidebar from "./sidebar/sidebar";
 import { FormSchema } from "./sidebar/sidebarForm";
 
+// TODO: Change the examplemarkers to the actual apartments data, get it down to one example data file for ease of pushing to real data
+
 export default function Home() {
     const [parameters, setParameters] = useState<z.infer<typeof FormSchema>[]>([]);
     const [visibleParameters, setVisibleParameters] = useState<boolean[]>(
@@ -102,6 +104,13 @@ export default function Home() {
                                             <ApartmentCard apartment={apartment} />
                                         </div>
                                     ))}
+                                {apartments.filter(isApartmentInsideVisiblePolygons).length ===
+                                    0 && (
+                                    <div className="py-4 text-center text-gray-500">
+                                        No apartments found. Ease up on the parameters to display
+                                        compatible apartments!
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <ParameterMenu
