@@ -40,6 +40,7 @@ export default function UserCard() {
                     <div>Age: 24</div>
                     <div>Gender: Male</div>
                     <div className="text-sm">This user is Aligned with your price range</div>
+                    <div>This user would likely be a good fit for a roommate</div>
                 </CardContent>
                 <CardFooter className="flex justify-between p-4">
                     <Button variant="outline">Do not see again</Button>

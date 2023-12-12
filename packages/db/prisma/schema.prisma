@@ -72,25 +72,10 @@ model User {
   accounts Account[]
   sessions Session[]
 
-  tasks Task[]
+  friends  User[] @relation("UserFriends")
+  friendOf User[] @relation("UserFriends")
 
   @@index([id])
   @@index([email])
   @@map(name: "users")
-}
-
-model Task {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
-
-  text      String
-  completed Boolean @default(false)
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
-
-  @@index([userId])
-  @@index([id])
-  @@map(name: "examples")
 }

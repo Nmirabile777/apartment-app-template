@@ -30,6 +30,7 @@ interface Props {
 
 const updateProfileSchema = z.object({
     name: z.string().min(3).max(32),
+    address: z.string().min(3).max(128),
 });
 
 export function ProfileSettings({ user }: Props) {
@@ -65,7 +66,11 @@ export function ProfileSettings({ user }: Props) {
                             <FormItem>
                                 <FormLabel>Name</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="johndoe" autoComplete="off" {...field} />
+                                    <Input
+                                        placeholder="Enter your name here..."
+                                        autoComplete="off"
+                                        {...field}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                                 <FormDescription>
@@ -75,11 +80,42 @@ export function ProfileSettings({ user }: Props) {
                         )}
                     />
                     <div className="border-t-border border-t pt-4">
-                        <Button size="xs" type="submit" disabled={isLoading}>
+                        <Button size="sm" type="submit" disabled={isLoading}>
                             {isLoading ? <Loader size="sm" /> : "Update"}
                         </Button>
                     </div>
                 </Shell>
+
+                {/* Address */}
+                <Shell className="space-y-2">
+                    <FormField
+                        control={form.control}
+                        name="address"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Address</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Enter your address here..."
+                                        autoComplete="off"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                                <FormDescription>
+                                    This is the name that will be displayed on your profile.
+                                </FormDescription>
+                            </FormItem>
+                        )}
+                    />
+                    <div className="border-t-border border-t pt-4">
+                        <Button size="sm" type="submit" disabled={isLoading}>
+                            {isLoading ? <Loader size="sm" /> : "Update"}
+                        </Button>
+                    </div>
+                </Shell>
+                <div>PUT MORE PROFILE SETTINGS HERE, BUT DONT REPEAT THE USER PROFILE SETTINGS</div>
+                <div>the other page has looking for a roommate, occupation, rough location, age, and price range</div>
             </form>
         </Form>
     );

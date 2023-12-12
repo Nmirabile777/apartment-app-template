@@ -48,15 +48,15 @@ export function UserAccountDropdown({ user }: Props) {
                             <UserCircle className="h-4 w-4" />
                         </Link>
                     </DropdownMenuItem>
-                    {/* <DropdownMenuItem className="px-2">
+                    <DropdownMenuItem className="px-2">
                         <Link
                             className="flex w-full items-center justify-between gap-2"
-                            href="/groups"
+                            href="/roommatesurvey"
                         >
-                            <span>Groups</span>
+                            <span>Roommate Survey</span>
                             <Users className="h-4 w-4" />
                         </Link>
-                    </DropdownMenuItem> */}
+                    </DropdownMenuItem>
                 </div>
                 <Separator />
                 <DropdownMenuItem>

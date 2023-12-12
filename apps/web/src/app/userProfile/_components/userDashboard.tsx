@@ -15,6 +15,7 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
+    DialogDescription,
     DialogTrigger,
     Input,
     Label,
@@ -117,7 +118,6 @@ export default function Component() {
 function UserProfileSection() {
     return (
         <div className="space-y-6 rounded-lg bg-white p-6 shadow-lg">
-            <Header title="User Profile" buttonText="Edit Profile" />
             <div className="flex flex-col">
                 <AvatarSection name="Nicholas Mirabile" email="nickmirabile777@gmail.com" />
                 <Separator className="mt-2" />
@@ -164,23 +164,12 @@ function UserProfileSection() {
 function FriendsAndGroupsSection() {
     return (
         <div className="space-y-6 rounded-lg bg-white p-6 shadow-lg lg:col-span-2">
-            <Section title="Friends" buttonText="Manage Friends">
+            <FriendsSection title="Friends" buttonText="Manage Friends">
                 <FriendsList />
-            </Section>
-            <Section title="Groups" buttonText="Manage Groups">
+            </FriendsSection>
+            <GroupsSection title="Groups" buttonText="Manage Groups">
                 <GroupsList />
-            </Section>
-        </div>
-    );
-}
-
-function Header({ title, buttonText }: HeaderProps) {
-    return (
-        <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold">{title}</h1>
-            <Button size="sm" variant="outline">
-                {buttonText}
-            </Button>
+            </GroupsSection>
         </div>
     );
 }
@@ -188,16 +177,16 @@ function Header({ title, buttonText }: HeaderProps) {
 function AvatarSection({ name, email }: AvatarSectionProps) {
     return (
         <Dialog>
-            <DialogTrigger>
-                <div className="grid place-items-center">
+            <div className="grid place-items-center">
+                <DialogTrigger>
                     <Avatar className="h-24 w-24">
                         <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                         <AvatarFallback>JP</AvatarFallback>
                     </Avatar>
-                    <h2 className="mt-4 text-lg font-semibold">{name}</h2>
-                    <p className="text-gray-500">{email}</p>
-                </div>
-            </DialogTrigger>
+                </DialogTrigger>
+                <h2 className="mt-4 text-lg font-semibold">{name}</h2>
+                <p className="text-gray-500">{email}</p>
+            </div>
             <DialogContent>
                 <div>update profile picture here</div>
                 <DialogClose>
@@ -209,11 +198,62 @@ function AvatarSection({ name, email }: AvatarSectionProps) {
     );
 }
 
-function Section({ title, buttonText, children }: SectionProps) {
+function FriendsSection({ title, buttonText, children }: SectionProps) {
     return (
         <div className="space-y-4">
-            <Header title={title} buttonText={buttonText} />
+            <FriendsHeader title={title} buttonText={buttonText} />
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3">{children}</div>
+        </div>
+    );
+}
+
+function FriendsHeader({ title, buttonText }: HeaderProps) {
+    return (
+        <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-semibold">{title}</h1>
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button size="sm" variant="outline">
+                        {buttonText}
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogDescription>Put Friends Editor Here...</DialogDescription>
+                    <DialogClose asChild>
+                        <Button>Close</Button>
+                    </DialogClose>
+                </DialogContent>
+            </Dialog>
+        </div>
+    );
+}
+
+function GroupsSection({ title, buttonText, children }: SectionProps) {
+    return (
+        <div className="space-y-4">
+            <GroupsHeader title={title} buttonText={buttonText} />
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3">{children}</div>
+        </div>
+    );
+}
+
+function GroupsHeader({ title, buttonText }: HeaderProps) {
+    return (
+        <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-semibold">{title}</h1>
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button size="sm" variant="outline">
+                        {buttonText}
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                <DialogDescription>Put Groups Editor Here...</DialogDescription>
+                    <DialogClose asChild>
+                        <Button>Close</Button>
+                    </DialogClose>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
