@@ -25,3 +25,4 @@ export * from "./components/ui/select";
 export * from "./components/ui/checkbox";
 export * from "./components/ui/sheet";
 export * from "./components/ui/switch";
+export * from "./components/ui/radio-group";

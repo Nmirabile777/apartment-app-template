@@ -133,28 +133,36 @@ function UserProfileSection() {
                 <Label className="mt-4">Occupation: (Current: Aerospace Engineer)</Label>
                 <div className="mb-4 flex w-full max-w-xs items-center space-x-2">
                     <Input type="occupation" placeholder="Occupation" />
-                    <Button type="submit">Update</Button>
+                    <Button type="submit" size={"sm"}>
+                        Update
+                    </Button>
                 </div>
 
                 {/* Location  */}
                 <Label className="mt-2">Location: (Current: Northborough Area)</Label>
                 <div className="mb-4 flex w-full max-w-xs items-center space-x-2">
                     <Input type="location" placeholder="Location" />
-                    <Button type="submit">Update</Button>
+                    <Button type="submit" size={"sm"}>
+                        Update
+                    </Button>
                 </div>
 
                 {/* Age */}
                 <Label className="mt-2">Age: (Current: 24)</Label>
                 <div className="mb-4 flex w-full max-w-xs items-center space-x-2">
                     <Input type="age" placeholder="Age" />
-                    <Button type="submit">Update</Button>
+                    <Button type="submit" size={"sm"}>
+                        Update
+                    </Button>
                 </div>
 
                 {/* Price Range */}
                 <Label className="mt-4">Your Private Price Range: (Current: Less than $1500)</Label>
                 <div className="mb-4 flex w-full max-w-xs items-center space-x-2">
                     <Input type="age" placeholder="Your Price Range" />
-                    <Button type="submit">Update</Button>
+                    <Button type="submit" size={"sm"}>
+                        Update
+                    </Button>
                 </div>
             </div>
         </div>
@@ -248,7 +256,7 @@ function GroupsHeader({ title, buttonText }: HeaderProps) {
                     </Button>
                 </DialogTrigger>
                 <DialogContent>
-                <DialogDescription>Put Groups Editor Here...</DialogDescription>
+                    <DialogDescription>Put Groups Editor Here...</DialogDescription>
                     <DialogClose asChild>
                         <Button>Close</Button>
                     </DialogClose>

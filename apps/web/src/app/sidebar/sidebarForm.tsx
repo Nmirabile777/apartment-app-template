@@ -258,6 +258,7 @@ export default function SideBarForm({ parameters, setParameters }: SidebarProps)
                                         <div className="flex items-center space-x-2">
                                             <Label>Arrival</Label>
                                             <Switch
+                                                className="data-[state=unchecked]:bg-secondary"
                                                 onCheckedChange={field.onChange}
                                                 id="arrivalOrDeparture"
                                             />
