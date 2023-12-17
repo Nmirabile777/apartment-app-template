@@ -11,15 +11,19 @@ import UserDashboard from "./_components/userDashboard";
 
 export default async function UserProfile() {
     const session = await getServerAuthSession();
+
     if (!session) {
         return redirect("/");
     }
+
     const subscription = await getUserPlan(session.user.id);
     let isCanceled = false;
+
     if (subscription.isPremium && subscription.stripeSubscriptionId) {
         const stripePlan = await stripe.subscriptions.retrieve(subscription.stripeSubscriptionId);
         isCanceled = stripePlan.cancel_at_period_end;
     }
+
     return (
         <Tabs className="container" defaultValue="publicprofile">
             <TabsList>

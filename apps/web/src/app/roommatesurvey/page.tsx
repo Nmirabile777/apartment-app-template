@@ -1,29 +1,64 @@
 "use client";
 
-import { useState } from "react";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 import {
     Button,
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogTrigger,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+    Input,
     Label,
     RadioGroup,
     RadioGroupItem,
+    ScrollArea,
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
     Separator,
+    Switch,
+    useZodForm,
 } from "@blueprint/ui";
 
-interface Answers {
-    [key: string]: string;
-}
+type QuestionName = `q${
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 9
+    | 10
+    | 11
+    | 12
+    | 13
+    | 14
+    | 15
+    | 16
+    | 17
+    | 18
+    | 19
+    | 20
+    | 21
+    | 22
+    | 23
+    | 24}`;
 
-const schema = z.object({
+const FormSchema = z.object({
     q1: z.string(),
     q2: z.string(),
     q3: z.string(),
@@ -50,34 +85,9 @@ const schema = z.object({
     q24: z.string(),
 });
 
-function QuestionTemplate(
-    questionId: string,
-    questions: string[],
-    onAnswer: (questionId: string, answer: string) => void,
-) {
-    return (
-        <RadioGroup>
-            <Separator className="mt-2" />
-            <Label>{questions[0]}</Label>
-            {questions.slice(1).map((option, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                    <RadioGroupItem
-                        value={`answer${index}`}
-                        id={`answer${index}`}
-                        onChange={() => onAnswer(questionId, `answer${index}`)}
-                    />
-                    <Label htmlFor={`answer${index}`}>{option}</Label>
-                </div>
-            ))}
-        </RadioGroup>
-    );
-}
-
-type FormData = z.infer<typeof schema>;
-
-export default function RoommateSurvey() {
-    const { control, handleSubmit } = useForm<FormData>({
-        resolver: zodResolver(schema),
+export default function SideBarForm() {
+    const form = useZodForm({
+        schema: FormSchema,
     });
 
     const questions = [
@@ -212,58 +222,33 @@ export default function RoommateSurvey() {
         ],
     ];
 
-    const onSubmit = (data: FormData) => {
-        console.log(data);
+    const handleSubmit = () => {
+        console.log("Submitted");
+        console.log("Data:");
+        console.log(form.getValues());
+        toast.success("Submitted!");
+
+        // TODO: Make API call to update user with "surveySubmitted=true"
     };
 
-    const questionNames = [
-        "q1",
-        "q2",
-        "q3",
-        "q4",
-        "q5",
-        "q6",
-        "q7",
-        "q8",
-        "q9",
-        "q10",
-        "q11",
-        "q12",
-        "q13",
-        "q14",
-        "q15",
-        "q16",
-        "q17",
-        "q18",
-        "q19",
-        "q20",
-        "q21",
-        "q22",
-        "q23",
-        "q24",
-    ];
-
     return (
-        <div>
-            <h1 className="ml-4">Roommate Survey</h1>
-            <div className="ml-4">
-                CAUTION: YOU CAN ONLY FILL THIS OUT ONCE, MAKE SURE YOU ARE HONEST
-            </div>
-            <div className="ml-4">Survey takes about 20 minutes to complete</div>
-            <Card className="mx-4 w-2/5 shadow-lg">
-                <CardHeader>Roommate Survey</CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        {questions.map((q, index) => (
-                            <CardDescription key={index}>
-                                <Controller
-                                    name={questionNames[index]}
-                                    control={control}
-                                    render={({ field }) => (
+        <div className="ml-4 w-1/5">
+            <h2 className="mb-4 font-bold">Roommate Survey:</h2>
+            <div className="text-red-600">NOTE: YOU CAN ONLY COMPLETE THIS ONCE</div>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-2">
+                    {questions.map((question, index) => (
+                        <FormField
+                            key={`q${index + 1}`}
+                            control={form.control}
+                            name={`q${index + 1}` as QuestionName}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
                                         <RadioGroup {...field}>
                                             <Separator className="mt-2" />
-                                            <Label>{q[0]}</Label>
-                                            {q.slice(1).map((option, optionIndex) => (
+                                            <Label>{question[0]}</Label>
+                                            {question.slice(1).map((option, optionIndex) => (
                                                 <div
                                                     key={optionIndex}
                                                     className="flex items-center space-x-2"
@@ -273,16 +258,28 @@ export default function RoommateSurvey() {
                                                 </div>
                                             ))}
                                         </RadioGroup>
-                                    )}
-                                />
-                            </CardDescription>
-                        ))}
-                        <CardFooter>
-                            <Button type="submit">Submit</Button>
-                        </CardFooter>
-                    </form>
-                </CardContent>
-            </Card>
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                    ))}
+                    <Dialog>
+                        <DialogTrigger>
+                            <Button>Submit</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogDescription>
+                                Are you sure you want to submit? You will not be able to change your
+                                answers afterwards!
+                            </DialogDescription>
+                            <DialogClose>
+                                <Button className="mr-4">Cancel</Button>
+                                <Button onClick={handleSubmit}>Submit</Button>
+                            </DialogClose>
+                        </DialogContent>
+                    </Dialog>
+                </form>
+            </Form>
         </div>
     );
 }

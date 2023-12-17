@@ -18,11 +18,21 @@ import { FormSchema } from "./sidebar/sidebarForm";
 
 // TODO: Change the examplemarkers to the actual apartments data, get it down to one example data file for ease of pushing to real data
 
+type SortCriteria = {
+    sortBy: "price" | "bedrooms" | "bathrooms";
+    sortOrder: "ascending" | "descending";
+};
+
 export default function Home() {
     const [parameters, setParameters] = useState<z.infer<typeof FormSchema>[]>([]);
     const [visibleParameters, setVisibleParameters] = useState<boolean[]>(
         new Array(parameters.length).fill(true),
     );
+
+    const [sortCriteria, setSortCriteria] = useState<SortCriteria>({
+        sortBy: "price",
+        sortOrder: "ascending",
+    });
 
     const toggleParameterVisibility = (index: number) => {
         setVisibleParameters((currentVisibleParameters) =>
@@ -65,6 +75,30 @@ export default function Home() {
         [mappedPolygons, visibleParameters],
     );
 
+    const sortedApartments = [...apartments]
+        .filter(isApartmentInsideVisiblePolygons)
+        .sort((a, b) => {
+            switch (sortCriteria.sortBy) {
+                case "price":
+                    return sortCriteria.sortOrder === "ascending"
+                        ? a.price - b.price
+                        : b.price - a.price;
+                case "bedrooms":
+                    // Assuming 'bedrooms' is a numeric value
+                    return sortCriteria.sortOrder === "ascending"
+                        ? a.bedrooms - b.bedrooms
+                        : b.bedrooms - a.bedrooms;
+                case "bathrooms":
+                    // Assuming 'bathrooms' is a numeric value
+                    return sortCriteria.sortOrder === "ascending"
+                        ? a.bathrooms - b.bathrooms
+                        : b.bathrooms - a.bathrooms;
+                default:
+                    // Provide a default case to handle unexpected 'sortBy' values
+                    return 0; // or any other default sorting logic
+            }
+        });
+
     return (
         <div className="flex h-screen w-full flex-col px-2 md:flex-row">
             {/* Sidebar */}
@@ -76,6 +110,8 @@ export default function Home() {
                     <SearchBar
                         showApartments={showApartments}
                         setShowApartments={setShowApartments}
+                        sortCriteria={sortCriteria}
+                        setSortCriteria={setSortCriteria}
                     />
                 </div>
 
@@ -97,15 +133,12 @@ export default function Home() {
                     <ScrollArea className="h-full">
                         {showApartments ? (
                             <div className="grid grid-cols-1 gap-1 md:grid-cols-2">
-                                {apartments
-                                    .filter(isApartmentInsideVisiblePolygons)
-                                    .map((apartment) => (
-                                        <div key={apartment.id}>
-                                            <ApartmentCard apartment={apartment} />
-                                        </div>
-                                    ))}
-                                {apartments.filter(isApartmentInsideVisiblePolygons).length ===
-                                    0 && (
+                                {sortedApartments.map((apartment) => (
+                                    <div key={apartment.id}>
+                                        <ApartmentCard apartment={apartment} />
+                                    </div>
+                                ))}
+                                {sortedApartments.length === 0 && (
                                     <div className="py-4 text-center text-gray-500">
                                         No apartments found. Ease up on the parameters to display
                                         compatible apartments!

@@ -10,6 +10,7 @@ import {
     Card,
     CardContent,
     CardDescription,
+    CardFooter,
     CardHeader,
     CardTitle,
     Dialog,
@@ -19,26 +20,38 @@ import {
     DialogTrigger,
     Input,
     Label,
+    ScrollArea,
     Separator,
     Switch,
 } from "@blueprint/ui";
 
+import { api } from "@/trpc/react";
+
 const friends = [
-    { name: "Alice Bob", avatar: "/placeholder-avatar.jpg" },
-    { name: "Charlie Doe", avatar: "/placeholder-avatar.jpg" },
-    { name: "Eve Fox", avatar: "/placeholder-avatar.jpg" },
+    { name: "Alice Bob", avatar: "https://github.com/shadcn.png", email: "alice@example.com" },
+    { name: "Charlie Doe", avatar: "https://github.com/shadcn.png", email: "123@example.com" },
+    { name: "Eve Fox", avatar: "https://github.com/shadcn.png", email: "456@example.com" },
+    { name: "Alice Bob", avatar: "https://github.com/shadcn.png", email: "alice@example.com" },
+    { name: "Charlie Doe", avatar: "https://github.com/shadcn.png", email: "123@example.com" },
+    { name: "Eve Fox", avatar: "https://github.com/shadcn.png", email: "456@example.com" },
+    { name: "Alice Bob", avatar: "https://github.com/shadcn.png", email: "alice@example.com" },
+    { name: "Charlie Doe", avatar: "https://github.com/shadcn.png", email: "123@example.com" },
+    { name: "Eve Fox", avatar: "https://github.com/shadcn.png", email: "456@example.com" },
+    { name: "Alice Bob", avatar: "https://github.com/shadcn.png", email: "alice@example.com" },
+    { name: "Charlie Doe", avatar: "https://github.com/shadcn.png", email: "123@example.com" },
+    { name: "Eve Fox", avatar: "https://github.com/shadcn.png", email: "456@example.com" },
 ];
 
 const groups = [
     { name: "Hopkinton Gang", members: ["Jack Quinlan", "Brian Giusti", "Justin Blanchard"] },
     { name: "Clarkson Bois", members: ["Erik Brown", "Dom Romano", "Evan Nyguen"] },
-    { name: "Kyle and Tom", members: ["Tom Mirabile", "Kyle Heavey"] },
+    { name: "Tom and Brianna", members: ["Tom Mirabile", "Brianna Mirabile"] },
+    { name: "Hopkinton Gang", members: ["Jack Quinlan", "Brian Giusti", "Justin Blanchard"] },
+    { name: "Clarkson Bois", members: ["Erik Brown", "Dom Romano", "Evan Nyguen"] },
+    { name: "Tom and Brianna", members: ["Tom Mirabile", "Brianna Mirabile"] },
 ];
 
-interface HeaderProps {
-    title: string;
-    buttonText: string;
-}
+// TODO: Integrate API calls in this file
 
 interface AvatarSectionProps {
     name: string;
@@ -46,12 +59,11 @@ interface AvatarSectionProps {
 }
 
 interface SectionProps {
-    title: string;
-    buttonText: string;
     children: React.ReactNode;
 }
 
 function FriendsList() {
+    // const { data: friends, isLoading } = api.friends.getFriends.useQuery();
     return (
         <>
             {friends.map((friend, index) => (
@@ -103,15 +115,6 @@ function GroupsList() {
                 </Card>
             ))}
         </>
-    );
-}
-
-export default function Component() {
-    return (
-        <div className="mx-auto grid  w-full gap-8 p-4 md:p-6 lg:grid-cols-3 lg:p-10">
-            <UserProfileSection />
-            <FriendsAndGroupsSection />
-        </div>
     );
 }
 
@@ -172,10 +175,10 @@ function UserProfileSection() {
 function FriendsAndGroupsSection() {
     return (
         <div className="space-y-6 rounded-lg bg-white p-6 shadow-lg lg:col-span-2">
-            <FriendsSection title="Friends" buttonText="Manage Friends">
+            <FriendsSection>
                 <FriendsList />
             </FriendsSection>
-            <GroupsSection title="Groups" buttonText="Manage Groups">
+            <GroupsSection>
                 <GroupsList />
             </GroupsSection>
         </div>
@@ -206,62 +209,122 @@ function AvatarSection({ name, email }: AvatarSectionProps) {
     );
 }
 
-function FriendsSection({ title, buttonText, children }: SectionProps) {
+function FriendsSection({ children }: SectionProps) {
     return (
         <div className="space-y-4">
-            <FriendsHeader title={title} buttonText={buttonText} />
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3">{children}</div>
+            <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-semibold">Friends</h1>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button size="sm" variant="outline">
+                            Manage Friends
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="h-4/5 w-4/5">
+                        <DialogDescription>Manage Friends Here:</DialogDescription>
+                        <div className="grid grid-cols-2 gap-4 overflow-auto md:grid-cols-3">
+                            {friends.map((friend, index) => (
+                                <Card key={index} className="col-span-1 mx-1 flex h-full flex-col">
+                                    <CardHeader>
+                                        <Avatar className="h-10 w-10">
+                                            <AvatarImage
+                                                alt={`${friend.name} avatar`}
+                                                src={friend.avatar}
+                                            />
+                                            <AvatarFallback>
+                                                {friend.name
+                                                    .split(" ")
+                                                    .map((n) => n[0])
+                                                    .join("")}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                    </CardHeader>
+                                    <CardContent className="flex-grow overflow-auto">
+                                        <CardTitle>{friend.name}</CardTitle>
+                                        <CardDescription>
+                                            Friend contact info, available?, other info Email:{" "}
+                                            {friend.email}
+                                        </CardDescription>
+                                    </CardContent>
+                                    <CardFooter className="grid grid-cols-2">
+                                        <Button className="mx-2 rounded border border-red-700 bg-red-500 px-4 py-2 font-semibold text-white shadow hover:bg-red-600">
+                                            Remove
+                                        </Button>
+                                        <Button className="mx-2 rounded border border-blue-700 bg-blue-500 px-4 py-2 font-semibold text-white shadow hover:bg-blue-600">
+                                            Form Group
+                                        </Button>
+                                    </CardFooter>
+                                </Card>
+                            ))}
+                        </div>
+                        <DialogClose asChild>
+                            <Button className="w-1/5">Close</Button>
+                        </DialogClose>
+                    </DialogContent>
+                </Dialog>
+            </div>
+            <ScrollArea className="max-h-60 overflow-y-auto">
+                <div className="grid grid-cols-2 gap-4 md:grid-cols-3">{children}</div>
+            </ScrollArea>
         </div>
     );
 }
 
-function FriendsHeader({ title, buttonText }: HeaderProps) {
-    return (
-        <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold">{title}</h1>
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button size="sm" variant="outline">
-                        {buttonText}
-                    </Button>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogDescription>Put Friends Editor Here...</DialogDescription>
-                    <DialogClose asChild>
-                        <Button>Close</Button>
-                    </DialogClose>
-                </DialogContent>
-            </Dialog>
-        </div>
-    );
-}
-
-function GroupsSection({ title, buttonText, children }: SectionProps) {
+function GroupsSection({ children }: SectionProps) {
     return (
         <div className="space-y-4">
-            <GroupsHeader title={title} buttonText={buttonText} />
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3">{children}</div>
+            <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-semibold">Groups</h1>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button size="sm" variant="outline">
+                            Manage Groups
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="w-4/4 h-4/5">
+                        <DialogDescription>Manage Groups Here:</DialogDescription>
+                        <div className="grid grid-cols-3">
+                            {groups.map((group, index) => (
+                                <Card className="col-span-1 mx-1 flex h-full flex-col" key={index}>
+                                    <CardHeader>{group.name}</CardHeader>
+                                    <CardContent className="flex-grow overflow-auto">
+                                        <CardDescription>
+                                            {group.members.length} members
+                                        </CardDescription>
+                                        <>
+                                            {group.members.map((member, index) => (
+                                                <div>{member}</div>
+                                            ))}
+                                        </>
+                                    </CardContent>
+                                    <CardFooter className="grid grid-cols-3">
+                                        <Button className="mx-1">Disband</Button>
+                                        <Button className="mx-1">Add</Button>
+                                        <Button className="mx-1">Remove</Button>
+                                    </CardFooter>
+                                </Card>
+                            ))}
+                        </div>
+                        <DialogClose asChild>
+                            <Button className="w-1/5">Close</Button>
+                        </DialogClose>
+                    </DialogContent>
+                </Dialog>
+            </div>
+            <ScrollArea className="max-h-72 overflow-y-auto">
+                <div className="grid grid-cols-2 gap-4 md:grid-cols-3">{children}</div>
+            </ScrollArea>
         </div>
     );
 }
 
-function GroupsHeader({ title, buttonText }: HeaderProps) {
+
+
+export default function Component() {
     return (
-        <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold">{title}</h1>
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button size="sm" variant="outline">
-                        {buttonText}
-                    </Button>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogDescription>Put Groups Editor Here...</DialogDescription>
-                    <DialogClose asChild>
-                        <Button>Close</Button>
-                    </DialogClose>
-                </DialogContent>
-            </Dialog>
+        <div className="mx-auto grid  w-full gap-8 p-4 md:p-6 lg:grid-cols-3 lg:p-10">
+            <UserProfileSection />
+            <FriendsAndGroupsSection />
         </div>
     );
 }
