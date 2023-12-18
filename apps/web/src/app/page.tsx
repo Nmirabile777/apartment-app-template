@@ -84,12 +84,10 @@ export default function Home() {
                         ? a.price - b.price
                         : b.price - a.price;
                 case "bedrooms":
-                    // Assuming 'bedrooms' is a numeric value
                     return sortCriteria.sortOrder === "ascending"
                         ? a.bedrooms - b.bedrooms
                         : b.bedrooms - a.bedrooms;
                 case "bathrooms":
-                    // Assuming 'bathrooms' is a numeric value
                     return sortCriteria.sortOrder === "ascending"
                         ? a.bathrooms - b.bathrooms
                         : b.bathrooms - a.bathrooms;

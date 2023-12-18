@@ -18,6 +18,7 @@ export async function Nav() {
                     <Shapes className="h-6 w-6" />
                 </Link>
             </div>
+            
             <Suspense>
                 {session ? <UserAccountDropdown user={session.user} /> : <LoginButton />}
             </Suspense>

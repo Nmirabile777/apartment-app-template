@@ -1,3 +1,4 @@
+"use client";
 export * from "./components/ui/accordion";
 export * from "./components/ui/alert";
 export * from "./components/ui/avatar";
@@ -26,3 +27,4 @@ export * from "./components/ui/checkbox";
 export * from "./components/ui/sheet";
 export * from "./components/ui/switch";
 export * from "./components/ui/radio-group";
+export * from "./components/ui/navigation-menu";

@@ -81,14 +81,14 @@ export default function ParameterCard({ parameters, onRemove }: ParameterProps) 
                                 </p>
                                 <div className="flex justify-end space-x-2">
                                     <DialogClose>
+                                        <Button className="rounded-md px-4 py-2 text-white">
+                                            Cancel
+                                        </Button>
                                         <Button
                                             className="rounded-md border px-4 py-2 text-white"
                                             onClick={() => onRemove(index)}
                                         >
                                             Confirm
-                                        </Button>
-                                        <Button className="rounded-md px-4 py-2 text-white">
-                                            Cancel
                                         </Button>
                                     </DialogClose>
                                 </div>

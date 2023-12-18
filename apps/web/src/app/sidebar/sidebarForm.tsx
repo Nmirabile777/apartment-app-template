@@ -68,7 +68,7 @@ export default function SideBarForm({ parameters, setParameters }: SidebarProps)
     const [localParameters, setLocalParameters] = useState<ParameterData[]>([]);
 
     const importParameters = (importedParams: ParameterData[]) => {
-        setParameters((currentParameters) => [...currentParameters, ...importedParams]);
+        setLocalParameters((currentParameters) => [...currentParameters, ...importedParams]);
     };
 
     const onSubmit = (data: z.infer<typeof FormSchema>) => {
@@ -87,7 +87,7 @@ export default function SideBarForm({ parameters, setParameters }: SidebarProps)
     };
 
     const handleRemoveParameter = (indexToRemove: number) => {
-        setParameters((currentParameters) =>
+        setLocalParameters((currentParameters) =>
             currentParameters.filter((_, index) => index !== indexToRemove),
         );
     };
@@ -258,7 +258,7 @@ export default function SideBarForm({ parameters, setParameters }: SidebarProps)
                                         <div className="flex items-center space-x-2">
                                             <Label>Arrival</Label>
                                             <Switch
-                                                className="data-[state=unchecked]:bg-secondary"
+                                                className="data-[state=unchecked]:bg-primary"
                                                 onCheckedChange={field.onChange}
                                                 id="arrivalOrDeparture"
                                             />

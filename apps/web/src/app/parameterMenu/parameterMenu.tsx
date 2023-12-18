@@ -3,6 +3,7 @@ import React from "react";
 import * as z from "zod";
 
 import {
+    Button,
     Card,
     CardDescription,
     CardFooter,
@@ -43,7 +44,10 @@ export default function ParameterMenu({
     return (
         <div>
             <ScrollArea className="h-full p-4">
-                <h1 className="mb-4 text-2xl font-bold">Parameter Menu</h1>
+                <div className="grid grid-cols-2">
+                    <h1 className="mb-4 text-2xl font-bold">Parameter Menu</h1>
+                    <Button>Save To Your Search Parameters</Button>
+                </div>
                 {parameters.length === 0 ? (
                     <p className="text-lg text-gray-500">No parameters added yet.</p>
                 ) : (
